@@ -214,10 +214,6 @@ func failureResponseStructure(data map[string]interface{}) *ErrorResponseModel {
 	return &errorResponse
 }
 
-func successResponseStructure(data map[string]interface{}) (map[string]interface{}, *ErrorResponseModel) {
-	return data, nil
-}
-
 func readJkey(userId string) (string, *ErrorResponseModel) {
 	jkey, errRead := readJKeyFromConfig(userId)
 	if errRead != nil {

@@ -7,7 +7,7 @@ const status_ok = "200"
 const status_internal_server_error = "500"
 
 // URLs
-const base_url = "https://connect-go.thefirstock.tech/V1"
+const base_url = "https://api.firstock.in/V1"
 
 const login_url = base_url + "/login"
 const logout_url = base_url + "/logout"
