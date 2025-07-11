@@ -328,7 +328,7 @@ fmt.Println("Error:", err)
 fmt.Println("Result:", timePriceSeriesDayInterval)
 
 
-Refer to the [Firstock Connect Documentation](https://connect.thefirstock.com/)  for the complete list of supported methods.
+Refer to the [Firstock Connect Documentation](https://firstock.in/api/docs/)  for the complete list of supported methods.
 
 ## Changelog
 
