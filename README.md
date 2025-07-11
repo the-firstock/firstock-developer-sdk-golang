@@ -1,10 +1,10 @@
-# The Firstock Developer API Nodejs client - 
+# The Firstock Developer API Golang client - 
 
-To communicate with the Firstock Developer API using Nodejs, you can use the official Nodejs client library provided by Firstock.
+To communicate with the Firstock Developer API using Golang, you can use the official Golang client library provided by Firstock.
 Licensed under the MIT License.
 
 
-[Version - 1.0.0](https://www.npmjs.com/package/firstock)
+[Version - 1.0.0]
 
 
 ## Documentation
