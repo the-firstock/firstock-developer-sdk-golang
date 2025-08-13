@@ -529,6 +529,33 @@ type HoldingEntry struct {
 	TradingSymbol string `json:"tradingSymbol"`
 }
 
+// -------------------------------------------------------Holdings Details Response--------------------------------------
+
+type HoldingsDetailsResponse struct {
+	Status  string    `json:"status"`
+	Message string    `json:"message"`
+	Data    []Holding `json:"data"`
+}
+
+type Holding struct {
+	ExchangeTradingSymbol []ExchangeTradingSymbolDetails `json:"exchangeTradingSymbol"`
+	SellAmount            string                         `json:"sellAmount"`
+	HoldQuantity          string                         `json:"holdQuantity"`
+	UploadPrice           string                         `json:"uploadPrice"`
+	BTSTQuantity          string                         `json:"BTSTQuantity"`
+	UsedQuantity          string                         `json:"usedQuantity"`
+	TradeQuantity         string                         `json:"tradeQuantity"`
+}
+
+type ExchangeTradingSymbolDetails struct {
+	Exchange       string `json:"exchange"`
+	Token          string `json:"token"`
+	TradingSymbol  string `json:"tradingSymbol"`
+	PricePrecision string `json:"pricePrecision"`
+	TickSize       string `json:"tickSize"`
+	LotSize        string `json:"lotSize"`
+}
+
 // -------------------------------------------------------Order Book Response--------------------------------------
 type OrderBookResponse struct {
 	Status  string           `json:"status"`

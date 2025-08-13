@@ -77,7 +77,7 @@ func (fs *firstock) Logout(userId string) (logoutResponse *LogoutResponse, errLo
 		errLogout = internalServerErrorResponse()
 		return
 	} else if code == status_ok {
-		jsonData, err := json.Marshal(logoutResponse)
+		jsonData, err := json.Marshal(logoutInfo)
 		if err != nil {
 			return nil, internalServerErrorResponse()
 		}
@@ -465,6 +465,42 @@ func (fs *firstock) Holdings(userId string) (holdingsResponse *HoldingsResponse,
 	}
 
 	holdingsDetails, code, _ := thefirstock.HoldingsFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(userId)
+	} else if code == status_internal_server_error {
+		errHoldings = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		jsonData, err := json.Marshal(holdingsDetails)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		// Unmarshal JSON to struct
+		err = json.Unmarshal(jsonData, holdingsResponse)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		return
+	}
+
+	errHoldings = failureResponseStructure(holdingsDetails)
+	return
+}
+
+func (fs *firstock) HoldingsDetails(userId string) (holdingsResponse *HoldingsDetailsResponse, errHoldings *ErrorResponseModel) {
+	holdingsResponse = &HoldingsDetailsResponse{}
+	// Read jKey for userId from config.json
+	jkey, errHoldings := readJkey(userId)
+	if jkey == "" {
+		return
+	}
+
+	reqBody := BaseRequest{
+		UserId: userId,
+		JKey:   jkey,
+	}
+
+	holdingsDetails, code, _ := thefirstock.HoldingsDetailsFunction(reqBody)
 	if check_if_unauthorized(code) {
 		removeJKeyFromConfig(userId)
 	} else if code == status_internal_server_error {
@@ -1095,6 +1131,7 @@ type FirstockAPI interface {
 	RMSLmit(userId string) (rmsLmitResponse *RmsLimitResponse, errRes *ErrorResponseModel)
 	PositionBook(userId string) (positionBookResponse *PositionBookResponse, errRes *ErrorResponseModel)
 	Holdings(userId string) (holdingsResponse *HoldingsResponse, errRes *ErrorResponseModel)
+	HoldingsDetails(userId string) (holdingsResponse *HoldingsDetailsResponse, errRes *ErrorResponseModel)
 	OrderBook(userId string) (orderBookResponse *OrderBookResponse, errRes *ErrorResponseModel)
 	GetExpiry(getExpiryRequest GetInfoRequest) (getExpiryResponse *GetExpiryResponse, errRes *ErrorResponseModel)
 	BrokerageCalculator(brokerageCalculatorRequest BrokerageCalculatorRequest) (brokerageCalculatorResponse *BrokerageCalculatorResponse, errRes *ErrorResponseModel)
@@ -1161,6 +1198,10 @@ func PositionBook(userId string) (positionBookResponse *PositionBookResponse, er
 
 func Holdings(userId string) (holdingsResponse *HoldingsResponse, errRes *ErrorResponseModel) {
 	return firstockAPI.Holdings(userId)
+}
+
+func HoldingsDetails(userId string) (holdingsResponse *HoldingsDetailsResponse, errRes *ErrorResponseModel) {
+	return firstockAPI.HoldingsDetails(userId)
 }
 
 func OrderBook(userId string) (orderBookResponse *OrderBookResponse, errRes *ErrorResponseModel) {

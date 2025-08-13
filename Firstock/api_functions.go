@@ -318,6 +318,31 @@ func (fs *apifunctions) HoldingsFunction(req BaseRequest) (holdingsResponse map[
 	return
 }
 
+func (fs *apifunctions) HoldingsDetailsFunction(req BaseRequest) (holdingsResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(req)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+	resp, err := http.Post(holdings_details_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &holdingsResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+}
+
 func (fs *apifunctions) OrderBookFunction(req BaseRequest) (orderBookResponse map[string]interface{}, statusCode string, err error) {
 
 	jsonPayload, err := json.Marshal(req)

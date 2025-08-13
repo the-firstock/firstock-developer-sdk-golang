@@ -145,6 +145,11 @@ holdingsDetails, err := Firstock.Holdings(userId)
 fmt.Println("Error:", err)
 fmt.Println("Result:", holdingsDetails)
 
+// Holdings Details
+holdingsDetails, err := Firstock.HoldingsDetails(userId)
+fmt.Println("Error:", err)
+fmt.Println("Result:", holdingsDetails)
+
 // Limit
 rmsLimitDetails, err := Firstock.RMSLmit(userId)
 fmt.Println("Error:", err)
