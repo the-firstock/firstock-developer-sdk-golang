@@ -5,6 +5,7 @@ package Firstock
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 type firstock struct{}
@@ -730,6 +731,21 @@ func (fs *firstock) ProductConversion(productConversionRequest ProductConversion
 	jkey, errproductConversion := readJkey(productConversionRequest.UserId)
 	if jkey == "" {
 		return
+	}
+	msgFlag := strings.TrimSpace(productConversionRequest.MessageFlag)
+	if msgFlag != "" {
+		switch msgFlag {
+		case "1", "2", "3", "4":
+		default:
+			errproductConversion = failureResponseStructure(map[string]interface{}{
+				"status": "failed",
+				"code":   "400",
+				"error": map[string]interface{}{
+					"message": product_conversion_error_message,
+				},
+			})
+			return
+		}
 	}
 
 	reqBody := ProductConversionRequestBody{

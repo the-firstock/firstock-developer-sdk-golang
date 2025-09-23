@@ -40,3 +40,4 @@ const time_price_series_url = base_url + "/timePriceSeries"
 // Error messages
 const please_login_to_firstock = "Please login to Firstock"
 const internal_server_error = "Internal Server Error"
+const product_conversion_error_message = "message_flag can only have values `1`, `2`, `3` or `4`"

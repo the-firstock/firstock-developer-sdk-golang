@@ -220,6 +220,7 @@ type ProductConversionRequest struct {
 	PreviousProduct string `json:"previousProduct"`
 	Product         string `json:"product"`
 	Quantity        string `json:"quantity"`
+	MessageFlag     string `json:"message_flag"`
 }
 
 type ProductConversionRequestBody struct {

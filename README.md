@@ -134,6 +134,7 @@ productConversionRequest := Firstock.ProductConversionRequest{
 		PreviousProduct: "I", // B = Buy, S = Sell
 		Product:         "C", // C = Delivery, I = Intraday, M = Margin Intraday (MIS)
 		Quantity:        "1", // As string
+		 MessageFlag:     "1",
 	}
 
 productConversion, err := Firstock.ProductConversion(productConversionRequest)
