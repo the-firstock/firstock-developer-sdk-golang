@@ -2,6 +2,54 @@
 // SPDX-License-Identifier: MIT
 package Firstock
 
+type ordercallBackFunc func(data map[string]string)
+type positioncallBackFunc func(data map[string]interface{})
+type subcribeFeedCallBack func(data SubscribeFeedModel) //replace with model
+type WebSocketModel struct {
+	OrderData         ordercallBackFunc
+	PositonData       positioncallBackFunc
+	SubscribeFeedData subcribeFeedCallBack
+	Tokens            []string
+}
+type SubscribeFeedModel struct {
+	BestBuy                         []Best  `json:"best_buy"`
+	BestSell                        []Best  `json:"best_sell"`
+	CExchFeedTime                   string  `json:"c_exch_feed_time"`
+	CExchSeg                        string  `json:"c_exch_seg"`
+	CNetChangeIndicator             int64   `json:"c_net_change_indicator"`
+	CSymbol                         string  `json:"c_symbol"`
+	IAverageTradePrice              int64   `json:"i_average_trade_price"`
+	IBuyDepthSize                   int64   `json:"i_buy_depth_size"`
+	IClosingPrice                   int64   `json:"i_closing_price"`
+	ClosePrice                      int64   `json:"close_price"`
+	IFeedTime                       int64   `json:"i_feed_time"`
+	IHighPrice                      int64   `json:"i_high_price"`
+	ILastTradeQuantity              int64   `json:"i_last_trade_quantity"`
+	ILastTradeTime                  int64   `json:"i_last_trade_time"`
+	ILastTradedPrice                int64   `json:"i_last_traded_price"`
+	ILowPrice                       int64   `json:"i_low_price"`
+	ILowerCircuitLimit              int64   `json:"i_lower_circuit_limit"`
+	INetPriceChangeFromClosingPrice int64   `json:"i_net_price_change_from_closing_price"`
+	IOpenPrice                      int64   `json:"i_open_price"`
+	ISecondsSinceBoe                float64 `json:"i_seconds_since_boe"`
+	ISellDepthSize                  int64   `json:"i_sell_depth_size"`
+	ITotalBuyQuantity               int64   `json:"i_total_buy_quantity"`
+	ITotalOpenInterest              int64   `json:"i_total_open_interest"`
+	ITotalSellQuantity              int64   `json:"i_total_sell_quantity"`
+	ITotalTradevalue                int64   `json:"i_total_tradevalue"`
+	IUpperCircuitLimit              int64   `json:"i_upper_circuit_limit"`
+	IUsecs                          int64   `json:"i_usecs"`
+	IVolumeTradedToday              int64   `json:"i_volume_traded_today"`
+	IYearlyHighPrice                int64   `json:"i_yearly_high_price"`
+	IYearlyLowPrice                 int64   `json:"i_yearly_low_price"`
+}
+
+type Best struct {
+	Price    int64 `json:"price"`
+	Quantity int64 `json:"quantity"`
+	Orders   int64 `json:"orders"`
+}
+
 // Models for Login
 type LoginRequest struct {
 	UserId     string `json:"userId"`
@@ -916,4 +964,11 @@ type TimePriceSeriesDayData struct {
 	Close     float64 `json:"close"`
 	Volume    int     `json:"volume"`
 	OI        int     `json:"oi"`
+}
+
+//---------------------------------------------------- WEB SOCKET -------------------------------------------------------------------------
+
+type WebsocketAuthorization struct {
+	Message string `json:"message"`
+	Status  string `json:"status"`
 }

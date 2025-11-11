@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+
+	"github.com/gorilla/websocket"
 )
 
 type firstock struct{}
@@ -1163,11 +1165,28 @@ type FirstockAPI interface {
 	OptionChain(optionChainRequest OptionChainRequest) (optionChainResponse *OptionChainResponse, errRes *ErrorResponseModel)
 	TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel)
 	TimePriceSeriesDayInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesDayIntervalResponse *TimePriceSeriesDayIntervalResponse, errRes *ErrorResponseModel)
+	InitializeWebSockets(userId string, model WebSocketModel) (conn *websocket.Conn, errRes *ErrorResponseModel)
+	CloseWebSocket(conn *websocket.Conn) (err *ErrorResponseModel)
+	Subscribe(conn *websocket.Conn, data []string) (err *ErrorResponseModel)
+	Unsubscribe(conn *websocket.Conn, data []string) (err *ErrorResponseModel)
 }
 
 // internal instance, not exported
 var firstockAPI FirstockAPI = &firstock{}
 
+// -------------------------------- WebSocket --------------------------------------------------
+func InitializeWebSockets(userId string, model WebSocketModel) (conn *websocket.Conn, errRes *ErrorResponseModel) {
+	return firstockAPI.InitializeWebSockets(userId, model)
+}
+func CloseWebSocket(conn *websocket.Conn) (err *ErrorResponseModel) {
+	return firstockAPI.CloseWebSocket(conn)
+}
+func Subscribe(conn *websocket.Conn, data []string) (err *ErrorResponseModel) {
+	return firstockAPI.Subscribe(conn, data)
+}
+func Unsubscribe(conn *websocket.Conn, data []string) (err *ErrorResponseModel) {
+	return firstockAPI.Unsubscribe(conn, data)
+}
 func Login(reqBody LoginRequest) (loginResponse *LoginResponse, errRes *ErrorResponseModel) {
 	return firstockAPI.Login(reqBody)
 }

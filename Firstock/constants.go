@@ -37,6 +37,17 @@ const search_scrips_url = base_url + "/searchScrips"
 const option_chain_url = base_url + "/optionChain"
 const time_price_series_url = base_url + "/timePriceSeries"
 
+const scheme = "wss"
+const host = "socket.firstock.in"
+const path = "/ws"
+const srcVal = "developer-api"
+const maxWebsocketConnectionRetries = 20
+const timeInterval = 10
+const accept_encoding = "gzip, deflate, br, zstd"
+const accept_language = "en-US,en;q=0.9"
+const no_cache = "no-cache"
+const origin = "https://firstock.in"
+
 // Error messages
 const please_login_to_firstock = "Please login to Firstock"
 const internal_server_error = "Internal Server Error"
