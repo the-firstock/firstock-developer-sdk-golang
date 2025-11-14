@@ -38,7 +38,7 @@ const option_chain_url = base_url + "/optionChain"
 const time_price_series_url = base_url + "/timePriceSeries"
 
 const scheme = "wss"
-const host = "websockets-mock.firstock.in" //socket.firstock.in
+const host = "socket.firstock.in"
 const path = "/ws"
 const srcVal = "developer-api"
 const maxWebsocketConnectionRetries = 20
