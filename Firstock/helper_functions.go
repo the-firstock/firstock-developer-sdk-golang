@@ -1,4 +1,4 @@
-// Copyright (c) [2025] [abc]
+// Copyright (c) [2025] [Firstock]
 // SPDX-License-Identifier: MIT
 package Firstock
 

@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.2.0]
+[Version - 1.3.0]
 
 
 ## Documentation
@@ -333,6 +333,99 @@ timePriceSeriesDayInterval, err := Firstock.TimePriceSeriesDayInterval(timePrice
 fmt.Println("Error:", err)
 fmt.Println("Result:", timePriceSeriesDayInterval)
 
+//Websockets
+model := Firstock.WebSocketModel{
+		OrderData:                   orderBookData,
+		PositonData:                 positionBookData,
+		SubscribeFeedData:           subscribeFeedData,
+		SubscribeOptionGreeksData:   subscribeOptionGreeksData,
+		SubscribeFeedTokens:         []string{},
+		WebSocketConection:          webSocketConnection1,
+		SubscribeOptionGreeksTokens: []string{"NSE:26000", "BSE:1"},
+	}
+
+err = Firstock.InitializeWebSockets(userId, model)
+fmt.Println("Error:", err)
+if conn1 != nil {
+	err = Firstock.Subscribe(conn1, []string{"NSE:26000", "BSE:1"})
+}
+fmt.Println("Error:", err)
+fmt.Println("Waiting:")
+time.Sleep(25 * time.Second)
+err = Firstock.Unsubscribe(conn1, []string{"NSE:26000", "BSE:1", "NSE:2885"})
+fmt.Println("Unsubscribed")
+fmt.Println("Error:", err)
+err = Firstock.CloseWebSocket(conn1)
+fmt.Println(err)
+
+//CallBack Methods Example
+
+var conn1 *websocket.Conn
+
+func webSocketConnection1(conn *websocket.Conn) {
+	if conn != nil {
+		conn1 = conn
+	}
+}
+
+func subscribeFeedData(data Firstock.SubscribeFeedModel) {
+	logFile, err := os.OpenFile("websocket.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("Error opening log file: %v\n", err)
+		return
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+
+	// Now write to the log file
+	log.Println(data)
+}
+
+func subscribeOptionGreeksData(data Firstock.OptionGreeksModel) {
+
+	logFile, err := os.OpenFile("option_greeks.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("Error opening log file: %v\n", err)
+		return
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+
+	// Now write to the log file
+	log.Println(data)
+}
+
+func orderBookData(data map[string]string) {
+
+	logFile, err := os.OpenFile("order_detail.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("Error opening log file: %v\n", err)
+		return
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+
+	// Now write to the log file
+	log.Println(data)
+}
+
+func positionBookData(data map[string]interface{}) {
+
+	logFile, err := os.OpenFile("position_detail.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		fmt.Printf("Error opening log file: %v\n", err)
+		return
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+
+	// Now write to the log file
+	log.Println(data)
+}
 
 Refer to the [Firstock Connect Documentation](https://firstock.in/api/docs/)  for the complete list of supported methods.
 

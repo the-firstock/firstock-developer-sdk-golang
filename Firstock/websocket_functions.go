@@ -1,9 +1,10 @@
+// Copyright (c) [2025] [Firstock]
+// SPDX-License-Identifier: MIT
 package Firstock
 
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -14,9 +15,17 @@ import (
 
 func getUrlAndHeaderData(userId string) (baseUrl string, headers http.Header, err *ErrorResponseModel) {
 	urlVal := url.URL{Scheme: scheme, Host: host, Path: path}
-	log.Printf("Connecting to %s", urlVal.String())
 	jKey, err := readJkey(userId)
-	if err != nil || jKey == "" {
+	if err != nil {
+		return
+	} else if jKey == "" {
+		err = &ErrorResponseModel{
+			Code:   "400",
+			Status: "failed",
+			Error: ErrorDetail{
+				Message: "Please login first",
+			},
+		}
 		return
 	}
 
@@ -42,34 +51,45 @@ func readMessage(userId string, conn *websocket.Conn, model WebSocketModel) {
 			return
 		}
 
-		msgType, msg, err := conn.ReadMessage()
+		_, msg, err := conn.ReadMessage()
 		if err != nil {
-			log.Printf("Read error: %v type:%v msg: %s", err, msgType, msg)
 			for i := 0; i < maxWebsocketConnectionRetries; i++ {
 				time.Sleep(timeInterval * time.Second)
 				if !checkIfConnectionExists(conn) {
 					return
 				}
-				log.Println("Attempting to reconnect...")
+				fmt.Println("Attempting to reconnect...")
 
 				// Build the WebSocket URL
 				baseUrl, headers, errWebSockets := getUrlAndHeaderData(userId)
 				if errWebSockets != nil {
 					return
 				}
-				conn, _, err = websocket.DefaultDialer.Dial(baseUrl, headers)
+				conn2, _, err := websocket.DefaultDialer.Dial(baseUrl, headers)
 				if err != nil {
-					log.Printf("Reconnect failed: %v", err)
 					continue // try again
 				}
+				if checkIfConnectionExists(conn) {
+					deleteConnection(conn)
+				} else {
+					conn = nil
+				}
+				conn = conn2
+				addConnection(conn)
 
-				log.Println("Reconnected successfully.")
+				if model.SubscribeFeedData != nil && (len(model.SubscribeFeedTokens) > 0) {
+					subscribe(conn, model.SubscribeFeedTokens)
+				}
+				if model.SubscribeOptionGreeksData != nil && (len(model.SubscribeOptionGreeksTokens) > 0) {
+					subscribeOptionGreeks(conn, model.SubscribeOptionGreeksTokens)
+				}
+				fmt.Println("Reconnected successfully.")
 				break
 			}
 
 			_, msg, err = conn.ReadMessage()
 			if err != nil {
-				return
+				continue
 			}
 		}
 		if strings.Contains(string(msg), "Authentication successful") || strings.Contains(string(msg), `\"status\":\"failed\"`) {
@@ -87,17 +107,34 @@ func readMessage(userId string, conn *websocket.Conn, model WebSocketModel) {
 			if err == nil {
 				model.PositonData(data)
 			}
-		} else if model.SubscribeFeedData != nil && !(strings.Contains(string(msg), "brkname") || strings.Contains(string(msg), "norenordno")) {
+		} else if model.SubscribeFeedData != nil && !(strings.Contains(string(msg), "brkname") || strings.Contains(string(msg), "norenordno") ||
+			strings.Contains(string(msg), "gamma")) {
 			var data SubscribeFeedModel
 			err = json.Unmarshal(msg, &data)
-			if err == nil {
+			if err == nil && data.CExchSeg != "" {
 				model.SubscribeFeedData(data)
+			} else {
+				var res map[string]SubscribeFeedModel
+				err = json.Unmarshal(msg, &res)
+				if err == nil {
+					for _, val := range res {
+						model.SubscribeFeedData(val)
+					}
+				}
+			}
+		} else if model.SubscribeOptionGreeksData != nil && strings.Contains(string(msg), "gamma") {
+			var res map[string]OptionGreeksModel
+			err = json.Unmarshal(msg, &res)
+			if err == nil {
+				for _, val := range res {
+					model.SubscribeOptionGreeksData(val)
+				}
 			}
 		}
 	}
 }
 
-// 🔸 Add a connection (safe, avoids duplicates)
+// Add a connection (safe, avoids duplicates)
 func addConnection(ws *websocket.Conn) *SafeConn {
 	connections.mu.Lock()
 	defer connections.mu.Unlock()
@@ -116,7 +153,7 @@ func addConnection(ws *websocket.Conn) *SafeConn {
 	return safe
 }
 
-// 🔸 Delete a connection (O(1))
+// Delete a connection
 func deleteConnection(ws *websocket.Conn) {
 	connections.mu.Lock()
 	defer connections.mu.Unlock()
@@ -128,10 +165,9 @@ func deleteConnection(ws *websocket.Conn) {
 		fmt.Println("Connection deleted")
 		return
 	}
-	fmt.Println("Connection not found")
 }
 
-// 🔸 Check if connection exists (O(1))
+// Check if connection exists
 func checkIfConnectionExists(ws *websocket.Conn) bool {
 	connections.mu.Lock()
 	defer connections.mu.Unlock()
@@ -140,7 +176,7 @@ func checkIfConnectionExists(ws *websocket.Conn) bool {
 	return exists
 }
 
-// 🔹 Safe write to a specific connection
+// Safe write to a specific connection
 func writeMessage(ws *websocket.Conn, data []byte) error {
 	connections.mu.Lock()
 	safe, ok := connections.indexMap[ws]
@@ -157,36 +193,116 @@ func writeMessage(ws *websocket.Conn, data []byte) error {
 }
 
 func subscribe(conn *websocket.Conn, data []string) (errRes *ErrorResponseModel) {
-	if !checkIfConnectionExists(conn) {
+	if conn != nil {
+		if !checkIfConnectionExists(conn) {
+			errRes = &ErrorResponseModel{
+				Code:   "400",
+				Status: "failed",
+				Error: ErrorDetail{
+					Message: "Connection does not exist",
+				},
+			}
+			return
+		}
+	} else {
 		errRes = &ErrorResponseModel{
+			Code:   "400",
+			Status: "failed",
 			Error: ErrorDetail{
-				Message: "Connection does not exist",
+				Message: "WebSocket connection is not initialized",
 			},
 		}
 		return
 	}
 	tokens := strings.Join(data, "|")
-	// fmt.Println(data)
 	msg := fmt.Sprintf(`{"action":"subscribe","tokens":"%s"}`, tokens)
-	// log.Println(msg)
 
 	_ = writeMessage(conn, []byte(msg))
 	return
 }
 
 func unsubscribe(conn *websocket.Conn, data []string) (errRes *ErrorResponseModel) {
-	if !checkIfConnectionExists(conn) {
+	if conn != nil {
+		if !checkIfConnectionExists(conn) {
+			errRes = &ErrorResponseModel{
+				Code:   "400",
+				Status: "failed",
+				Error: ErrorDetail{
+					Message: "Connection does not exist",
+				},
+			}
+			return
+		}
+	} else {
 		errRes = &ErrorResponseModel{
+			Code:   "400",
+			Status: "failed",
 			Error: ErrorDetail{
-				Message: "Connection does not exist",
+				Message: "WebSocket connection is not initialized",
 			},
 		}
 		return
 	}
 	tokens := strings.Join(data, "|")
-	// fmt.Println(data)
 	msg := fmt.Sprintf(`{"action":"unsubscribe","tokens":"%s"}`, tokens)
-	// log.Println(msg)
+
+	_ = writeMessage(conn, []byte(msg))
+	return
+}
+
+func subscribeOptionGreeks(conn *websocket.Conn, data []string) (errRes *ErrorResponseModel) {
+	if conn != nil {
+		if !checkIfConnectionExists(conn) {
+			errRes = &ErrorResponseModel{
+				Code:   "400",
+				Status: "failed",
+				Error: ErrorDetail{
+					Message: "Connection does not exist",
+				},
+			}
+			return
+		}
+	} else {
+		errRes = &ErrorResponseModel{
+			Code:   "400",
+			Status: "failed",
+			Error: ErrorDetail{
+				Message: "WebSocket connection is not initialized",
+			},
+		}
+		return
+	}
+	tokens := strings.Join(data, "|")
+	msg := fmt.Sprintf(`{"action":"subscribe-option-greeks","tokens":"%s"}`, tokens)
+
+	_ = writeMessage(conn, []byte(msg))
+	return
+}
+
+func unsubscribeOptionGreeks(conn *websocket.Conn, data []string) (errRes *ErrorResponseModel) {
+	if conn != nil {
+		if !checkIfConnectionExists(conn) {
+			errRes = &ErrorResponseModel{
+				Code:   "400",
+				Status: "failed",
+				Error: ErrorDetail{
+					Message: "Connection does not exist",
+				},
+			}
+			return
+		}
+	} else {
+		errRes = &ErrorResponseModel{
+			Code:   "400",
+			Status: "failed",
+			Error: ErrorDetail{
+				Message: "WebSocket connection is not initialized",
+			},
+		}
+		return
+	}
+	tokens := strings.Join(data, "|")
+	msg := fmt.Sprintf(`{"action":"unsubscribe-option-greeks","tokens":"%s"}`, tokens)
 
 	_ = writeMessage(conn, []byte(msg))
 	return
