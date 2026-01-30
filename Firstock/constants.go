@@ -39,7 +39,7 @@ const time_price_series_url = base_url + "/timePriceSeries"
 
 const scheme = "wss"
 const host = "socket.firstock.in"
-const path = "/ws"
+const path = "/V2/ws"
 const srcVal = "developer-api"
 const maxWebsocketConnectionRetries = 20
 const timeInterval = 1

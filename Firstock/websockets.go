@@ -96,7 +96,7 @@ func (fs *firstock) InitializeWebSockets(userId string, model WebSocketModel) (e
 		initConnections()
 	}
 	if strings.Contains(string(msg), "Authentication successful") {
-		conn.SetWriteDeadline(time.Now().Add(50 * time.Second))
+		conn.SetWriteDeadline(time.Time{})
 		addConnection(conn)
 
 		if len(model.SubscribeFeedTokens) > 0 {

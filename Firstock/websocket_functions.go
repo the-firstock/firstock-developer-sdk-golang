@@ -76,6 +76,7 @@ func readMessage(userId string, conn *websocket.Conn, model WebSocketModel) {
 				}
 				conn = conn2
 				addConnection(conn)
+				model.WebSocketConection(conn)
 
 				if model.SubscribeFeedData != nil && (len(model.SubscribeFeedTokens) > 0) {
 					subscribe(conn, model.SubscribeFeedTokens)
@@ -217,7 +218,10 @@ func subscribe(conn *websocket.Conn, data []string) (errRes *ErrorResponseModel)
 	tokens := strings.Join(data, "|")
 	msg := fmt.Sprintf(`{"action":"subscribe","tokens":"%s"}`, tokens)
 
-	_ = writeMessage(conn, []byte(msg))
+	err := writeMessage(conn, []byte(msg))
+	if err != nil {
+		fmt.Println("Error occured while subscribing token")
+	}
 	return
 }
 
@@ -246,7 +250,10 @@ func unsubscribe(conn *websocket.Conn, data []string) (errRes *ErrorResponseMode
 	tokens := strings.Join(data, "|")
 	msg := fmt.Sprintf(`{"action":"unsubscribe","tokens":"%s"}`, tokens)
 
-	_ = writeMessage(conn, []byte(msg))
+	err := writeMessage(conn, []byte(msg))
+	if err != nil {
+		fmt.Println("error occured while unsubscribing token")
+	}
 	return
 }
 
