@@ -353,6 +353,124 @@ type OptionChainRequestBody struct {
 	StrikePrice string `json:"strikePrice"`
 }
 
+type PlaceAMORequest struct {
+	UserId             string `json:"userId"`
+	ExchangeSegment    string `json:"exchange"`
+	OrdDuration        string `json:"retention"`
+	CustomerFirm       string `json:"customer_firm,omitempty"`
+	Product            string `json:"product"`
+	OrderType          string `json:"priceType"`
+	TrdSymbol          string `json:"tradingSymbol"`
+	TransType          string `json:"transactionType"`
+	GuiOrdId           string `json:"gui_order_id,omitempty"`
+	Price              string `json:"price,omitempty"`
+	TriggerPrice       string `json:"triggerPrice,omitempty"`
+	Quantity           string `json:"quantity"`
+	DiscQuantity       string `json:"dscqty,omitempty"`
+	OrdRemarks         string `json:"remarks,omitempty"`
+	OrdSrc             string `json:"ordersource,omitempty"`
+	BookProfitPrice    string `json:"book_profit_price,omitempty"`
+	BookLossPrice      string `json:"book_loss_price,omitempty"`
+	TrailingPrice      string `json:"trailing_price,omitempty"`
+	GuiOrgOrdId        string `json:"gui_org_order_id,omitempty"`
+	AlgoName           string `json:"algo_name,omitempty"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	VendorCode         string `json:"vendor_code,omitempty"`
+	AlgoId             string `json:"algo_id,omitempty"`
+	AlgoCategory       string `json:"algo_category,omitempty"`
+	ExternalRemarks    string `json:"handlinst,omitempty"`
+	Channel            string `json:"channel,omitempty"`
+	UserAgent          string `json:"usr_agent,omitempty"`
+	AppInstallId       string `json:"app_inst_id,omitempty"`
+	IpAddr             string `json:"ip_address,omitempty"`
+	AuctionNumber      string `json:"auction_number,omitempty"`
+}
+
+type PlaceAMORequestBody struct {
+	UserId             string `json:"userId"`
+	JKey               string `json:"jkey"`
+	ExchangeSegment    string `json:"exchange"`
+	OrdDuration        string `json:"retention"`
+	CustomerFirm       string `json:"customer_firm,omitempty"`
+	Product            string `json:"product"`
+	OrderType          string `json:"priceType"`
+	TrdSymbol          string `json:"tradingSymbol"`
+	TransType          string `json:"transactionType"`
+	GuiOrdId           string `json:"gui_order_id,omitempty"`
+	Price              string `json:"price,omitempty"`
+	TriggerPrice       string `json:"triggerPrice,omitempty"`
+	Quantity           string `json:"quantity"`
+	DiscQuantity       string `json:"dscqty,omitempty"`
+	OrdRemarks         string `json:"remarks,omitempty"`
+	OrdSrc             string `json:"ordersource,omitempty"`
+	BookProfitPrice    string `json:"book_profit_price,omitempty"`
+	BookLossPrice      string `json:"book_loss_price,omitempty"`
+	TrailingPrice      string `json:"trailing_price,omitempty"`
+	GuiOrgOrdId        string `json:"gui_org_order_id,omitempty"`
+	AlgoName           string `json:"algo_name,omitempty"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	VendorCode         string `json:"vendor_code,omitempty"`
+	AlgoId             string `json:"algo_id,omitempty"`
+	AlgoCategory       string `json:"algo_category,omitempty"`
+	ExternalRemarks    string `json:"handlinst,omitempty"`
+	Channel            string `json:"channel,omitempty"`
+	UserAgent          string `json:"usr_agent,omitempty"`
+	AppInstallId       string `json:"app_inst_id,omitempty"`
+	IpAddr             string `json:"ip_address,omitempty"`
+	AuctionNumber      string `json:"auction_number,omitempty"`
+}
+
+type ModifyAMORequest struct {
+	UserId             string `json:"userId"`
+	NorenOrdNum        string `json:"orderNumber"`
+	OrdDuration        string `json:"retention,omitempty"`
+	OrderType          string `json:"priceType"`
+	GuiOrdId           string `json:"gui_order_id,omitempty"`
+	GuiOrgOrdId        string `json:"gui_org_order_id,omitempty"`
+	Token              string `json:"tradingSymbol,omitempty"`
+	Price              string `json:"price,omitempty"`
+	TriggerPrice       string `json:"triggerPrice,omitempty"`
+	Quantity           string `json:"quantity,omitempty"`
+	DiscQuantity       string `json:"dscqty,omitempty"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	OrdSrc             string `json:"ordersource,omitempty"`
+	Product            string `json:"product,omitempty"`
+	ExternalRemarks    string `json:"handlinst,omitempty"`
+	BookProfitPrice    string `json:"book_profit_price,omitempty"`
+	BookLossPrice      string `json:"book_loss_price,omitempty"`
+	TrailingPrice      string `json:"trailing_price,omitempty"`
+	Channel            string `json:"channel,omitempty"`
+	UserAgent          string `json:"usr_agent,omitempty"`
+	AppInstallId       string `json:"app_inst_id,omitempty"`
+	IpAddr             string `json:"ip_address,omitempty"`
+}
+
+type ModifyAMORequestBody struct {
+	UserId             string `json:"userId"`
+	JKey               string `json:"jkey"`
+	NorenOrdNum        string `json:"orderNumber"`
+	OrdDuration        string `json:"retention,omitempty"`
+	OrderType          string `json:"priceType"`
+	GuiOrdId           string `json:"gui_order_id,omitempty"`
+	GuiOrgOrdId        string `json:"gui_org_order_id,omitempty"`
+	Token              string `json:"tradingSymbol,omitempty"`
+	Price              string `json:"price,omitempty"`
+	TriggerPrice       string `json:"triggerPrice,omitempty"`
+	Quantity           string `json:"quantity,omitempty"`
+	DiscQuantity       string `json:"dscqty,omitempty"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	OrdSrc             string `json:"ordersource,omitempty"`
+	Product            string `json:"product,omitempty"`
+	ExternalRemarks    string `json:"handlinst,omitempty"`
+	BookProfitPrice    string `json:"book_profit_price,omitempty"`
+	BookLossPrice      string `json:"book_loss_price,omitempty"`
+	TrailingPrice      string `json:"trailing_price,omitempty"`
+	Channel            string `json:"channel,omitempty"`
+	UserAgent          string `json:"usr_agent,omitempty"`
+	AppInstallId       string `json:"app_inst_id,omitempty"`
+	IpAddr             string `json:"ip_address,omitempty"`
+}
+
 type MultiQuoteData struct {
 	Exchange      string `json:"exchange"`
 	TradingSymbol string `json:"tradingSymbol"`
@@ -1006,6 +1124,55 @@ type TimePriceSeriesDayData struct {
 	Close     float64 `json:"close"`
 	Volume    int     `json:"volume"`
 	OI        int     `json:"oi"`
+}
+
+//---------------------------------------------------- Option Chain Greeks -------------------------------------------------------------------------
+
+type OptionChainGreeksRequest struct {
+	UserId      string `json:"userId"`
+	Exchange    string `json:"exchange"`
+	Symbol      string `json:"symbol"`
+	Expiry      string `json:"expiry"`
+	Count       string `json:"count"`
+	StrikePrice string `json:"strikePrice"`
+}
+
+type OptionChainGreeksRequestBody struct {
+	UserId      string `json:"userId"`
+	JKey        string `json:"jkey"`
+	Exchange    string `json:"exchange"`
+	Symbol      string `json:"symbol"`
+	Expiry      string `json:"expiry"`
+	Count       string `json:"count"`
+	StrikePrice string `json:"strikePrice"`
+}
+
+//--------------------------------------------------------- Option Chain Greeks Response---------------------------------------------------
+
+type OptionChainGreeksResponse struct {
+	Status  string             `json:"status"`
+	Message string             `json:"message"`
+	Data    []OptionWithGreeks `json:"data"`
+}
+
+type OptionWithGreeks struct {
+	Exchange        string `json:"exchange"`
+	Token           string `json:"token"`
+	TradingSymbol   string `json:"tradingSymbol"`
+	OptionType      string `json:"optionType"`
+	PricePrecision  string `json:"pricePrecision"`
+	LotSize         string `json:"lotSize"`
+	TickSize        string `json:"tickSize"`
+	StrikePrice     string `json:"strikePrice"`
+	LastTradedPrice string `json:"lastTradedPrice"`
+	ParentToken     string `json:"parentToken,omitempty"`
+	Delta           string `json:"delta"`
+	Gamma           string `json:"gamma"`
+	Theta           string `json:"theta"`
+	Vega            string `json:"vega"`
+	Rho             string `json:"rho"`
+	IV              string `json:"iv"`
+	Oi              string `json:"oi"`
 }
 
 //---------------------------------------------------- WEB SOCKET -------------------------------------------------------------------------

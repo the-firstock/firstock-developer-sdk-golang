@@ -1052,6 +1052,151 @@ func (fs *firstock) OptionChain(optionChainRequest OptionChainRequest) (optionCh
 	return
 
 }
+func (fs *firstock) OptionChainGreeks(optionChainGreeksRequest OptionChainGreeksRequest) (optionChainGreeksResponse *OptionChainGreeksResponse, errOptionChainGreeks *ErrorResponseModel) {
+	optionChainGreeksResponse = &OptionChainGreeksResponse{}
+	// Read jKey for userId from config.json
+	jkey, errOptionChainGreeks := readJkey(optionChainGreeksRequest.UserId)
+	if jkey == "" {
+		return
+	}
+
+	reqBody := OptionChainGreeksRequestBody{
+		UserId:      optionChainGreeksRequest.UserId,
+		JKey:        jkey,
+		Exchange:    optionChainGreeksRequest.Exchange,
+		Symbol:      optionChainGreeksRequest.Symbol,
+		Expiry:      optionChainGreeksRequest.Expiry,
+		Count:       optionChainGreeksRequest.Count,
+		StrikePrice: optionChainGreeksRequest.StrikePrice,
+	}
+
+	optionChainDetails, code, _ := thefirstock.OptionChainGreeksFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(optionChainGreeksRequest.UserId)
+	} else if code == status_internal_server_error {
+		errOptionChainGreeks = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		jsonData, err := json.Marshal(optionChainDetails)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		// Unmarshal JSON to struct
+		err = json.Unmarshal(jsonData, optionChainGreeksResponse)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		return
+	}
+
+	errOptionChainGreeks = failureResponseStructure(optionChainDetails)
+	return
+
+}
+
+func (fs *firstock) PlaceAMO(placeAMORequest PlaceAMORequest) (placeAMOResponse map[string]interface{}, errPlaceAMO *ErrorResponseModel) {
+	// Read jKey for userId from config.json
+	jkey, errPlaceAMO := readJkey(placeAMORequest.UserId)
+	if jkey == "" {
+		return
+	}
+
+	reqBody := PlaceAMORequestBody{
+		UserId:             placeAMORequest.UserId,
+		JKey:               jkey,
+		ExchangeSegment:    placeAMORequest.ExchangeSegment,
+		OrdDuration:        placeAMORequest.OrdDuration,
+		CustomerFirm:       placeAMORequest.CustomerFirm,
+		Product:            placeAMORequest.Product,
+		OrderType:          placeAMORequest.OrderType,
+		TrdSymbol:          placeAMORequest.TrdSymbol,
+		TransType:          placeAMORequest.TransType,
+		GuiOrdId:           placeAMORequest.GuiOrdId,
+		Price:              placeAMORequest.Price,
+		TriggerPrice:       placeAMORequest.TriggerPrice,
+		Quantity:           placeAMORequest.Quantity,
+		DiscQuantity:       placeAMORequest.DiscQuantity,
+		OrdRemarks:         placeAMORequest.OrdRemarks,
+		OrdSrc:             placeAMORequest.OrdSrc,
+		BookProfitPrice:    placeAMORequest.BookProfitPrice,
+		BookLossPrice:      placeAMORequest.BookLossPrice,
+		TrailingPrice:      placeAMORequest.TrailingPrice,
+		GuiOrgOrdId:        placeAMORequest.GuiOrgOrdId,
+		AlgoName:           placeAMORequest.AlgoName,
+		MktProtectionPrice: placeAMORequest.MktProtectionPrice,
+		VendorCode:         placeAMORequest.VendorCode,
+		AlgoId:             placeAMORequest.AlgoId,
+		AlgoCategory:       placeAMORequest.AlgoCategory,
+		ExternalRemarks:    placeAMORequest.ExternalRemarks,
+		Channel:            placeAMORequest.Channel,
+		UserAgent:          placeAMORequest.UserAgent,
+		AppInstallId:       placeAMORequest.AppInstallId,
+		IpAddr:             placeAMORequest.IpAddr,
+		AuctionNumber:      placeAMORequest.AuctionNumber,
+	}
+
+	placeAMOResponse, code, _ := thefirstock.PlaceAMOFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(placeAMORequest.UserId)
+	} else if code == status_internal_server_error {
+		errPlaceAMO = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		return
+	}
+
+	errPlaceAMO = failureResponseStructure(placeAMOResponse)
+	return
+
+}
+
+func (fs *firstock) ModifyAMO(modifyAMORequest ModifyAMORequest) (modifyAMOResponse map[string]interface{}, errModifyAMO *ErrorResponseModel) {
+	// Read jKey for userId from config.json
+	jkey, errModifyAMO := readJkey(modifyAMORequest.UserId)
+	if jkey == "" {
+		return
+	}
+
+	reqBody := ModifyAMORequestBody{
+		UserId:             modifyAMORequest.UserId,
+		JKey:               jkey,
+		NorenOrdNum:        modifyAMORequest.NorenOrdNum,
+		OrdDuration:        modifyAMORequest.OrdDuration,
+		OrderType:          modifyAMORequest.OrderType,
+		GuiOrdId:           modifyAMORequest.GuiOrdId,
+		GuiOrgOrdId:        modifyAMORequest.GuiOrgOrdId,
+		Token:              modifyAMORequest.Token,
+		Price:              modifyAMORequest.Price,
+		TriggerPrice:       modifyAMORequest.TriggerPrice,
+		Quantity:           modifyAMORequest.Quantity,
+		DiscQuantity:       modifyAMORequest.DiscQuantity,
+		MktProtectionPrice: modifyAMORequest.MktProtectionPrice,
+		OrdSrc:             modifyAMORequest.OrdSrc,
+		Product:            modifyAMORequest.Product,
+		ExternalRemarks:    modifyAMORequest.ExternalRemarks,
+		BookProfitPrice:    modifyAMORequest.BookProfitPrice,
+		BookLossPrice:      modifyAMORequest.BookLossPrice,
+		TrailingPrice:      modifyAMORequest.TrailingPrice,
+		Channel:            modifyAMORequest.Channel,
+		UserAgent:          modifyAMORequest.UserAgent,
+		AppInstallId:       modifyAMORequest.AppInstallId,
+		IpAddr:             modifyAMORequest.IpAddr,
+	}
+
+	modifyAMOResponse, code, _ := thefirstock.ModifyAMOFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(modifyAMORequest.UserId)
+	} else if code == status_internal_server_error {
+		errModifyAMO = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		return
+	}
+
+	errModifyAMO = failureResponseStructure(modifyAMOResponse)
+	return
+
+}
 
 func (fs *firstock) TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errTimePriceSeriesRegularInterval *ErrorResponseModel) {
 	timePriceSeriesRegularIntervalResponse = &TimePriceSeriesRegularIntervalResponse{}
@@ -1163,6 +1308,9 @@ type FirstockAPI interface {
 	IndexList(userId string) (indexListResponse *IndexListResponse, errRes *ErrorResponseModel)
 	SearchScrips(searchScripsRequest SearchScripsRequest) (searchScripsResponse *SearchScripsResponse, errRes *ErrorResponseModel)
 	OptionChain(optionChainRequest OptionChainRequest) (optionChainResponse *OptionChainResponse, errRes *ErrorResponseModel)
+	OptionChainGreeks(optionChainGreeksRequest OptionChainGreeksRequest) (optionChainGreeksResponse *OptionChainGreeksResponse, errRes *ErrorResponseModel)
+	PlaceAMO(placeAMORequest PlaceAMORequest) (placeAMOResponse map[string]interface{}, errRes *ErrorResponseModel)
+	ModifyAMO(modifyAMORequest ModifyAMORequest) (modifyAMOResponse map[string]interface{}, errRes *ErrorResponseModel)
 	TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel)
 	TimePriceSeriesDayInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesDayIntervalResponse *TimePriceSeriesDayIntervalResponse, errRes *ErrorResponseModel)
 	InitializeWebSockets(userId string, model WebSocketModel) (errRes *ErrorResponseModel)
@@ -1297,6 +1445,18 @@ func SearchScrips(searchScripsRequest SearchScripsRequest) (searchScripsResponse
 
 func OptionChain(optionChainRequest OptionChainRequest) (optionChainResponse *OptionChainResponse, errRes *ErrorResponseModel) {
 	return firstockAPI.OptionChain(optionChainRequest)
+}
+
+func OptionChainGreeks(optionChainGreeksRequest OptionChainGreeksRequest) (optionChainGreeksResponse *OptionChainGreeksResponse, errRes *ErrorResponseModel) {
+	return firstockAPI.OptionChainGreeks(optionChainGreeksRequest)
+}
+
+func PlaceAMO(placeAMORequest PlaceAMORequest) (placeAMOResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.PlaceAMO(placeAMORequest)
+}
+
+func ModifyAMO(modifyAMORequest ModifyAMORequest) (modifyAMOResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.ModifyAMO(modifyAMORequest)
 }
 
 func TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel) {

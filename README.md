@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.4.1]
+[Version - 1.4.2]
 
 
 ## Documentation
@@ -61,6 +61,34 @@ placeOrderRequest := Firstock.PlaceOrderRequest{
 placeOrder, err := Firstock.PlaceOrder(placeOrderRequest)
 fmt.Println("Error:", err)
 fmt.Println("Result:", placeOrder)
+
+//Place After Market Order
+placeAMORequest := Firstock.PlaceAMORequest{
+	UserId:          userId,
+	ExchangeSegment: "NSE",
+	OrdDuration:     "DAY",
+	Product:         "C",
+	OrderType:       "LMT",
+	TrdSymbol:       "IDEA-EQ",
+	TransType:       "B",
+	Price:           "9.20",
+	TriggerPrice:    "0",
+	Quantity:        "1",
+	OrdRemarks:      "AMO Order",
+}
+placeAmo, err := Firstock.PlaceAMO(placeAMORequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", placeAmo)
+
+modifyAMORequest := Firstock.ModifyAMORequest{
+	UserId:      userId,
+	NorenOrdNum: "26031900017331",
+	OrderType:   "LMT",
+}
+modifyAmo, err := Firstock.ModifyAMO(modifyAMORequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", modifyAmo)
+
 
 // Order Margin
 orderMarginRequest := Firstock.OrderMarginRequest{
@@ -290,13 +318,26 @@ optionChainRequest := Firstock.OptionChainRequest{
 		UserId:      userId,
 		Exchange:    "NFO",
 		Symbol:      "NIFTY",
-		Expiry:      "12JUN25", // Format must match broker format
-		Count:       "5",       // Number of strikes above/below
-		StrikePrice: "23150",   // ATM strike price
+		Expiry:      "12JUN25", 
+		Count:       "5",       
+		StrikePrice: "23150",   
 	}
 optionChain, err := Firstock.OptionChain(optionChainRequest)
 fmt.Println("Error:", err)
 fmt.Println("Result:", optionChain)
+
+// Option Chain Greeks
+optionChainGreeksRequest := Firstock.OptionChainGreeksRequest{
+	UserId:      userId,
+	Exchange:    "NFO",
+	Symbol:      "RELIANCE",
+	Expiry:      "30MAR26", 
+	Count:       "1",       
+	StrikePrice: "1420",    
+}
+optionChainGreeks, err := Firstock.OptionChainGreeks(optionChainGreeksRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", optionChainGreeks)
 
 // Search Scrips
 searchScripsRequest := Firstock.SearchScripsRequest{
