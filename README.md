@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.4.2]
+[Version - 1.4.3]
 
 
 ## Documentation
@@ -89,6 +89,72 @@ modifyAmo, err := Firstock.ModifyAMO(modifyAMORequest)
 fmt.Println("Error:", err)
 fmt.Println("Result:", modifyAmo)
 
+placeGttRequest := Firstock.GTT_Params{
+		UserId:       userId,
+		TrdSymbol:    "IDEA-EQ",
+		Exchange:     "NSE",
+		Validity:     "GTT",
+		Value:        "880",
+		VariableName: "x",
+		Token:        "14366",
+		Remarks:      "GTT",
+		Ltp:          "8.80",
+		OrderParams: &Firstock.PlaceOrderParams{
+			ExchangeSegment: "NSE",
+			OrdDuration:     "DAY",
+			Product:         "C",
+			OrderType:       "SL-LMT",
+			TrdSymbol:       "IDEA-EQ",
+			TransType:       "B",
+			Price:           "8.90",
+			TriggerPrice:    "8.00",
+			Quantity:        "10",
+			OrdRemarks:      "Test",
+		},
+	}
+placeGttOrder, err := Firstock.PlaceGttOrder(placeGttRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", placeGttOrder)
+
+modifyGttRequest := Firstock.GTT_Params{
+	UserId:       userId,
+	TrdSymbol:    "IDEA-EQ",
+	Exchange:     "NSE",
+	Validity:     "GTT",
+	Value:        "880",
+	VariableName: "x",
+	Token:        "14366",
+	Remarks:      "GTT",
+	Ltp:          "8.80",
+	GTTid:        "26032400000074",
+	OrderParams: &Firstock.PlaceOrderParams{
+		ExchangeSegment: "NSE",
+		OrdDuration:     "DAY",
+		Product:         "C",
+		OrderType:       "SL-LMT",
+		TrdSymbol:       "IDEA-EQ",
+		TransType:       "B",
+		Price:           "8.90",
+		TriggerPrice:    "8.00",
+		Quantity:        "10",
+		OrdRemarks:      "Test",
+		},
+	}
+modifyGttOrder, err := Firstock.ModifyGttOrder(modifyGttRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", modifyGttOrder)
+
+cancelGttRequest := Firstock.Cancel_GTT_Params{
+	UserId: userId,
+	GTTid:  "26032400000074",
+	}
+cancelGttOrder, err := Firstock.CancelGttOrder(cancelGttRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", cancelGttOrder)
+
+gttOrderBook, err := Firstock.GttOrderBook(userId)
+fmt.Println("Error:", err)
+fmt.Println("Result:", gttOrderBook)
 
 // Order Margin
 orderMarginRequest := Firstock.OrderMarginRequest{

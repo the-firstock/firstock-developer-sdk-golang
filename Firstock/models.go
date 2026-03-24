@@ -1175,6 +1175,96 @@ type OptionWithGreeks struct {
 	Oi              string `json:"oi"`
 }
 
+type Cancel_GTT_Params struct {
+	UserId string `json:"userId"`
+	GTTid  string `json:"GTTid,omitempty"`
+}
+
+type Cancel_GTT_Params_Body struct {
+	UserId string `json:"userId"`
+	JKey   string `json:"jkey"`
+	GTTid  string `json:"GTTid,omitempty"`
+}
+
+type GTT_Params struct {
+	UserId        string            `json:"userId"`
+	OrderParams   *PlaceOrderParams `json:"OrderParams,omitempty"`
+	AlName        string            `json:"AlName,omitempty"`
+	ExchSeg       string            `json:"exch,omitempty"`
+	Exchange      string            `json:"exchange,omitempty"`
+	Token         string            `json:"Token,omitempty"`
+	VariableName  string            `json:"VariableName,omitempty"`
+	VariableValue string            `json:"d,omitempty"`
+	Value         string            `json:"value,omitempty"`
+	Validity      string            `json:"validity,omitempty"`
+	GTTid         string            `json:"GTTid,omitempty"`
+	RemarksText   string            `json:"RemarksText,omitempty"`
+	Remarks       string            `json:"remarks,omitempty"`
+	TrdSymbol     string            `json:"tradingSymbol,omitempty"`
+	Multiplier    string            `json:"Multiplier,omitempty"`
+	Precision     string            `json:"Precision,omitempty"`
+	SrcBrokerId   string            `json:"SrcBrokerId,omitempty"`
+	Status        string            `json:"Status,omitempty"`
+	UpdateTime    string            `json:"UpdateTime,omitempty"`
+	Ltp           string            `json:"ltp,omitempty"`
+}
+
+type GTT_Req_Body struct {
+	UserId        string            `json:"userId"`
+	JKey          string            `json:"jkey"`
+	OrderParams   *PlaceOrderParams `json:"OrderParams,omitempty"`
+	AlName        string            `json:"AlName,omitempty"`
+	ExchSeg       string            `json:"exch,omitempty"`
+	Exchange      string            `json:"exchange,omitempty"`
+	Token         string            `json:"Token,omitempty"`
+	VariableName  string            `json:"VariableName,omitempty"`
+	VariableValue string            `json:"d,omitempty"`
+	Value         string            `json:"value,omitempty"`
+	Validity      string            `json:"validity,omitempty"`
+	GTTid         string            `json:"GTTid,omitempty"`
+	RemarksText   string            `json:"RemarksText,omitempty"`
+	Remarks       string            `json:"remarks,omitempty"`
+	TrdSymbol     string            `json:"tradingSymbol,omitempty"`
+	Multiplier    string            `json:"Multiplier,omitempty"`
+	Precision     string            `json:"Precision,omitempty"`
+	SrcBrokerId   string            `json:"SrcBrokerId,omitempty"`
+	Status        string            `json:"Status,omitempty"`
+	UpdateTime    string            `json:"UpdateTime,omitempty"`
+	Ltp           string            `json:"ltp,omitempty"`
+}
+
+type PlaceOrderParams struct {
+	ExchangeSegment    string `json:"exchange"`
+	OrdDuration        string `json:"retention"`
+	CustomerFirm       string `json:"customer_firm,omitempty"`
+	Product            string `json:"product"`
+	OrderType          string `json:"priceType"`
+	TrdSymbol          string `json:"tradingSymbol"`
+	TransType          string `json:"transactionType"`
+	GuiOrdId           string `json:"gui_order_id,omitempty"`
+	Price              string `json:"price,omitempty"`
+	TriggerPrice       string `json:"triggerPrice,omitempty"`
+	Quantity           string `json:"quantity"`
+	DiscQuantity       string `json:"dscqty,omitempty"`
+	OrdRemarks         string `json:"remarks,omitempty"`
+	OrdSrc             string `json:"ordersource,omitempty"`
+	BookProfitPrice    string `json:"book_profit_price,omitempty"`
+	BookLossPrice      string `json:"book_loss_price,omitempty"`
+	TrailingPrice      string `json:"trailing_price,omitempty"`
+	GuiOrgOrdId        string `json:"gui_org_order_id,omitempty"`
+	AlgoName           string `json:"algo_name,omitempty"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	VendorCode         string `json:"vendor_code,omitempty"`
+	AlgoId             string `json:"algo_id,omitempty"`
+	AlgoCategory       string `json:"algo_category,omitempty"`
+	ExternalRemarks    string `json:"handlinst,omitempty"`
+	Channel            string `json:"channel,omitempty"`
+	UserAgent          string `json:"usr_agent,omitempty"`
+	AppInstallId       string `json:"app_inst_id,omitempty"`
+	IpAddr             string `json:"ip_address,omitempty"`
+	AuctionNumber      string `json:"auction_number,omitempty"`
+}
+
 //---------------------------------------------------- WEB SOCKET -------------------------------------------------------------------------
 
 type WebsocketAuthorization struct {

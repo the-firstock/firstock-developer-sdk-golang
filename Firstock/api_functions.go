@@ -749,6 +749,110 @@ func (fs *apifunctions) ModifyAMOFunction(req ModifyAMORequestBody) (modifyAMORe
 	return
 }
 
+func (fs *apifunctions) PlaceGttOrderFunction(req GTT_Req_Body) (placeGttOrderResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(req)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(place_gtt_order_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &placeGttOrderResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+}
+
+func (fs *apifunctions) ModifyGttOrderFunction(req GTT_Req_Body) (modifyGttOrderResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(req)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(modify_gtt_order_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &modifyGttOrderResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+}
+
+func (fs *apifunctions) CancelGttOrderFunction(req Cancel_GTT_Params_Body) (cancelGttOrderResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(req)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(cancel_gtt_order_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &cancelGttOrderResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+}
+
+func (fs *apifunctions) GttOrderBookFunction(req UserDetailsRequest) (gttOrderBookResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(req)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(gtt_order_book_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &gttOrderBookResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+}
+
 func (fs *apifunctions) TimePriceSeriesRegularIntervalFunction(req TimePriceSeriesIntervalRequestBody) (timePriceSeriesRegularIntervalResponse map[string]interface{}, statusCode string, err error) {
 
 	jsonPayload, err := json.Marshal(req)

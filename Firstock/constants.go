@@ -38,6 +38,11 @@ const option_chain_url = base_url + "/optionChain"
 const option_chain_greeks_url = base_url + "/optionChainGreeks"
 const place_amo_url = base_url + "/placeAMO"
 const modify_amo_url = base_url + "/modifyAMO"
+const place_gtt_order_url = base_url + "/placeGttOrder"
+const modify_gtt_order_url = base_url + "/modifyGttOrder"
+const cancel_gtt_order_url = base_url + "/cancelGttOrder"
+const gtt_order_book_url = base_url + "/GttOrderBook"
+
 const time_price_series_url = base_url + "/timePriceSeries"
 
 const scheme = "wss"

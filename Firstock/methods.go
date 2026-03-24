@@ -1198,6 +1198,221 @@ func (fs *firstock) ModifyAMO(modifyAMORequest ModifyAMORequest) (modifyAMORespo
 
 }
 
+func (fs *firstock) PlaceGttOrder(placeGttOrderRequest GTT_Params) (placeGttOrderResponse map[string]interface{}, errPlaceGttOrder *ErrorResponseModel) {
+	// Read jKey for userId from config.json
+	jkey, errPlaceGttOrder := readJkey(placeGttOrderRequest.UserId)
+	if jkey == "" {
+		return
+	}
+
+	var orderParams *PlaceOrderParams
+	if placeGttOrderRequest.OrderParams != nil {
+		orderParams = &PlaceOrderParams{
+			ExchangeSegment:    placeGttOrderRequest.OrderParams.ExchangeSegment,
+			OrdDuration:        placeGttOrderRequest.OrderParams.OrdDuration,
+			CustomerFirm:       placeGttOrderRequest.OrderParams.CustomerFirm,
+			Product:            placeGttOrderRequest.OrderParams.Product,
+			OrderType:          placeGttOrderRequest.OrderParams.OrderType,
+			TrdSymbol:          placeGttOrderRequest.OrderParams.TrdSymbol,
+			TransType:          placeGttOrderRequest.OrderParams.TransType,
+			GuiOrdId:           placeGttOrderRequest.OrderParams.GuiOrdId,
+			Price:              placeGttOrderRequest.OrderParams.Price,
+			TriggerPrice:       placeGttOrderRequest.OrderParams.TriggerPrice,
+			Quantity:           placeGttOrderRequest.OrderParams.Quantity,
+			DiscQuantity:       placeGttOrderRequest.OrderParams.DiscQuantity,
+			OrdRemarks:         placeGttOrderRequest.OrderParams.OrdRemarks,
+			OrdSrc:             placeGttOrderRequest.OrderParams.OrdSrc,
+			BookProfitPrice:    placeGttOrderRequest.OrderParams.BookProfitPrice,
+			BookLossPrice:      placeGttOrderRequest.OrderParams.BookLossPrice,
+			TrailingPrice:      placeGttOrderRequest.OrderParams.TrailingPrice,
+			GuiOrgOrdId:        placeGttOrderRequest.OrderParams.GuiOrgOrdId,
+			AlgoName:           placeGttOrderRequest.OrderParams.AlgoName,
+			MktProtectionPrice: placeGttOrderRequest.OrderParams.MktProtectionPrice,
+			VendorCode:         placeGttOrderRequest.OrderParams.VendorCode,
+			AlgoId:             placeGttOrderRequest.OrderParams.AlgoId,
+			AlgoCategory:       placeGttOrderRequest.OrderParams.AlgoCategory,
+			ExternalRemarks:    placeGttOrderRequest.OrderParams.ExternalRemarks,
+			Channel:            placeGttOrderRequest.OrderParams.Channel,
+			UserAgent:          placeGttOrderRequest.OrderParams.UserAgent,
+			AppInstallId:       placeGttOrderRequest.OrderParams.AppInstallId,
+			IpAddr:             placeGttOrderRequest.OrderParams.IpAddr,
+			AuctionNumber:      placeGttOrderRequest.OrderParams.AuctionNumber,
+		}
+	}
+
+	reqBody := GTT_Req_Body{
+		UserId:        placeGttOrderRequest.UserId,
+		JKey:          jkey,
+		OrderParams:   orderParams,
+		AlName:        placeGttOrderRequest.AlName,
+		ExchSeg:       placeGttOrderRequest.ExchSeg,
+		Exchange:      placeGttOrderRequest.Exchange,
+		Token:         placeGttOrderRequest.Token,
+		VariableName:  placeGttOrderRequest.VariableName,
+		VariableValue: placeGttOrderRequest.VariableValue,
+		Value:         placeGttOrderRequest.Value,
+		Validity:      placeGttOrderRequest.Validity,
+		GTTid:         placeGttOrderRequest.GTTid,
+		RemarksText:   placeGttOrderRequest.RemarksText,
+		Remarks:       placeGttOrderRequest.Remarks,
+		TrdSymbol:     placeGttOrderRequest.TrdSymbol,
+		Multiplier:    placeGttOrderRequest.Multiplier,
+		Precision:     placeGttOrderRequest.Precision,
+		SrcBrokerId:   placeGttOrderRequest.SrcBrokerId,
+		Status:        placeGttOrderRequest.Status,
+		UpdateTime:    placeGttOrderRequest.UpdateTime,
+		Ltp:           placeGttOrderRequest.Ltp,
+	}
+
+	placeGttOrderResponse, code, _ := thefirstock.PlaceGttOrderFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(placeGttOrderRequest.UserId)
+	} else if code == status_internal_server_error {
+		errPlaceGttOrder = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		return
+	}
+
+	errPlaceGttOrder = failureResponseStructure(placeGttOrderResponse)
+	return
+
+}
+
+func (fs *firstock) ModifyGttOrder(modifyGttOrderRequest GTT_Params) (modifyGttOrderResponse map[string]interface{}, errPlaceGttOrder *ErrorResponseModel) {
+	// Read jKey for userId from config.json
+	jkey, errPlaceGttOrder := readJkey(modifyGttOrderRequest.UserId)
+	if jkey == "" {
+		return
+	}
+
+	var orderParams *PlaceOrderParams
+	if modifyGttOrderRequest.OrderParams != nil {
+		orderParams = &PlaceOrderParams{
+			ExchangeSegment:    modifyGttOrderRequest.OrderParams.ExchangeSegment,
+			OrdDuration:        modifyGttOrderRequest.OrderParams.OrdDuration,
+			CustomerFirm:       modifyGttOrderRequest.OrderParams.CustomerFirm,
+			Product:            modifyGttOrderRequest.OrderParams.Product,
+			OrderType:          modifyGttOrderRequest.OrderParams.OrderType,
+			TrdSymbol:          modifyGttOrderRequest.OrderParams.TrdSymbol,
+			TransType:          modifyGttOrderRequest.OrderParams.TransType,
+			GuiOrdId:           modifyGttOrderRequest.OrderParams.GuiOrdId,
+			Price:              modifyGttOrderRequest.OrderParams.Price,
+			TriggerPrice:       modifyGttOrderRequest.OrderParams.TriggerPrice,
+			Quantity:           modifyGttOrderRequest.OrderParams.Quantity,
+			DiscQuantity:       modifyGttOrderRequest.OrderParams.DiscQuantity,
+			OrdRemarks:         modifyGttOrderRequest.OrderParams.OrdRemarks,
+			OrdSrc:             modifyGttOrderRequest.OrderParams.OrdSrc,
+			BookProfitPrice:    modifyGttOrderRequest.OrderParams.BookProfitPrice,
+			BookLossPrice:      modifyGttOrderRequest.OrderParams.BookLossPrice,
+			TrailingPrice:      modifyGttOrderRequest.OrderParams.TrailingPrice,
+			GuiOrgOrdId:        modifyGttOrderRequest.OrderParams.GuiOrgOrdId,
+			AlgoName:           modifyGttOrderRequest.OrderParams.AlgoName,
+			MktProtectionPrice: modifyGttOrderRequest.OrderParams.MktProtectionPrice,
+			VendorCode:         modifyGttOrderRequest.OrderParams.VendorCode,
+			AlgoId:             modifyGttOrderRequest.OrderParams.AlgoId,
+			AlgoCategory:       modifyGttOrderRequest.OrderParams.AlgoCategory,
+			ExternalRemarks:    modifyGttOrderRequest.OrderParams.ExternalRemarks,
+			Channel:            modifyGttOrderRequest.OrderParams.Channel,
+			UserAgent:          modifyGttOrderRequest.OrderParams.UserAgent,
+			AppInstallId:       modifyGttOrderRequest.OrderParams.AppInstallId,
+			IpAddr:             modifyGttOrderRequest.OrderParams.IpAddr,
+			AuctionNumber:      modifyGttOrderRequest.OrderParams.AuctionNumber,
+		}
+	}
+
+	reqBody := GTT_Req_Body{
+		UserId:        modifyGttOrderRequest.UserId,
+		JKey:          jkey,
+		OrderParams:   orderParams,
+		AlName:        modifyGttOrderRequest.AlName,
+		ExchSeg:       modifyGttOrderRequest.ExchSeg,
+		Exchange:      modifyGttOrderRequest.Exchange,
+		Token:         modifyGttOrderRequest.Token,
+		VariableName:  modifyGttOrderRequest.VariableName,
+		VariableValue: modifyGttOrderRequest.VariableValue,
+		Value:         modifyGttOrderRequest.Value,
+		Validity:      modifyGttOrderRequest.Validity,
+		GTTid:         modifyGttOrderRequest.GTTid,
+		RemarksText:   modifyGttOrderRequest.RemarksText,
+		Remarks:       modifyGttOrderRequest.Remarks,
+		TrdSymbol:     modifyGttOrderRequest.TrdSymbol,
+		Multiplier:    modifyGttOrderRequest.Multiplier,
+		Precision:     modifyGttOrderRequest.Precision,
+		SrcBrokerId:   modifyGttOrderRequest.SrcBrokerId,
+		Status:        modifyGttOrderRequest.Status,
+		UpdateTime:    modifyGttOrderRequest.UpdateTime,
+		Ltp:           modifyGttOrderRequest.Ltp,
+	}
+
+	modifyGttOrderResponse, code, _ := thefirstock.ModifyGttOrderFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(modifyGttOrderRequest.UserId)
+	} else if code == status_internal_server_error {
+		errPlaceGttOrder = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		return
+	}
+
+	errPlaceGttOrder = failureResponseStructure(modifyGttOrderResponse)
+	return
+
+}
+
+func (fs *firstock) CancelGttOrder(cancelGttOrderRequest Cancel_GTT_Params) (cancelGttOrderResponse map[string]interface{}, errPlaceGttOrder *ErrorResponseModel) {
+	// Read jKey for userId from config.json
+	jkey, errPlaceGttOrder := readJkey(cancelGttOrderRequest.UserId)
+	if jkey == "" {
+		return
+	}
+	reqBody := Cancel_GTT_Params_Body{
+		UserId: cancelGttOrderRequest.UserId,
+		JKey:   jkey,
+		GTTid:  cancelGttOrderRequest.GTTid,
+	}
+
+	cancelGttOrderResponse, code, _ := thefirstock.CancelGttOrderFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(cancelGttOrderRequest.UserId)
+	} else if code == status_internal_server_error {
+		errPlaceGttOrder = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		return
+	}
+
+	errPlaceGttOrder = failureResponseStructure(cancelGttOrderResponse)
+	return
+
+}
+
+func (fs *firstock) GttOrderBook(userId string) (gttOrderBookResponse map[string]interface{}, errGttOrderBook *ErrorResponseModel) {
+	// Read jKey for userId from config.json
+	jkey, errGttOrderBook := readJkey(userId)
+	if jkey == "" {
+		return
+	}
+	reqBody := UserDetailsRequest{
+		UserId: userId,
+		JKey:   jkey,
+	}
+
+	gttOrderBookResponse, code, _ := thefirstock.GttOrderBookFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(userId)
+	} else if code == status_internal_server_error {
+		errGttOrderBook = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		return
+	}
+
+	errGttOrderBook = failureResponseStructure(gttOrderBookResponse)
+	return
+
+}
+
 func (fs *firstock) TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errTimePriceSeriesRegularInterval *ErrorResponseModel) {
 	timePriceSeriesRegularIntervalResponse = &TimePriceSeriesRegularIntervalResponse{}
 	// Read jKey for userId from config.json
@@ -1311,6 +1526,10 @@ type FirstockAPI interface {
 	OptionChainGreeks(optionChainGreeksRequest OptionChainGreeksRequest) (optionChainGreeksResponse *OptionChainGreeksResponse, errRes *ErrorResponseModel)
 	PlaceAMO(placeAMORequest PlaceAMORequest) (placeAMOResponse map[string]interface{}, errRes *ErrorResponseModel)
 	ModifyAMO(modifyAMORequest ModifyAMORequest) (modifyAMOResponse map[string]interface{}, errRes *ErrorResponseModel)
+	PlaceGttOrder(placeGttOrderRequest GTT_Params) (placeGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel)
+	ModifyGttOrder(modifyGttOrderRequest GTT_Params) (modifyGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel)
+	CancelGttOrder(cancelGttOrderRequest Cancel_GTT_Params) (cancelGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel)
+	GttOrderBook(userId string) (getGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel)
 	TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel)
 	TimePriceSeriesDayInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesDayIntervalResponse *TimePriceSeriesDayIntervalResponse, errRes *ErrorResponseModel)
 	InitializeWebSockets(userId string, model WebSocketModel) (errRes *ErrorResponseModel)
@@ -1457,6 +1676,22 @@ func PlaceAMO(placeAMORequest PlaceAMORequest) (placeAMOResponse map[string]inte
 
 func ModifyAMO(modifyAMORequest ModifyAMORequest) (modifyAMOResponse map[string]interface{}, errRes *ErrorResponseModel) {
 	return firstockAPI.ModifyAMO(modifyAMORequest)
+}
+
+func PlaceGttOrder(placeGttOrderRequest GTT_Params) (placeGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.PlaceGttOrder(placeGttOrderRequest)
+}
+
+func ModifyGttOrder(modifyGttOrderRequest GTT_Params) (modifyGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.ModifyGttOrder(modifyGttOrderRequest)
+}
+
+func CancelGttOrder(cancelGttOrderRequest Cancel_GTT_Params) (cancelGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.CancelGttOrder(cancelGttOrderRequest)
+}
+
+func GttOrderBook(userId string) (gttOrderBookResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.GttOrderBook(userId)
 }
 
 func TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel) {
