@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.4.3]
+[Version - 1.4.4]
 
 
 ## Documentation
