@@ -127,32 +127,34 @@ type LogoutResponse struct {
 
 // Models for Place Order
 type PlaceOrderRequest struct {
-	UserId          string `json:"userId"`
-	Exchange        string `json:"exchange"`
-	Retention       string `json:"retention"`
-	Product         string `json:"product"`
-	PriceType       string `json:"priceType"`
-	TradingSymbol   string `json:"tradingSymbol"`
-	TransactionType string `json:"transactionType"`
-	Price           string `json:"price"`
-	TriggerPrice    string `json:"triggerPrice"`
-	Quantity        string `json:"quantity"`
-	Remarks         string `json:"remarks"`
+	UserId             string `json:"userId"`
+	Exchange           string `json:"exchange"`
+	Retention          string `json:"retention"`
+	Product            string `json:"product"`
+	PriceType          string `json:"priceType"`
+	TradingSymbol      string `json:"tradingSymbol"`
+	TransactionType    string `json:"transactionType"`
+	Price              string `json:"price"`
+	TriggerPrice       string `json:"triggerPrice"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	Quantity           string `json:"quantity"`
+	Remarks            string `json:"remarks"`
 }
 
 type PlaceOrderRequestBody struct {
-	UserId          string `json:"userId"`
-	JKey            string `json:"jkey"`
-	Exchange        string `json:"exchange"`
-	Retention       string `json:"retention"`
-	Product         string `json:"product"`
-	PriceType       string `json:"priceType"`
-	TradingSymbol   string `json:"tradingSymbol"`
-	TransactionType string `json:"transactionType"`
-	Price           string `json:"price"`
-	TriggerPrice    string `json:"triggerPrice"`
-	Quantity        string `json:"quantity"`
-	Remarks         string `json:"remarks"`
+	UserId             string `json:"userId"`
+	JKey               string `json:"jkey"`
+	Exchange           string `json:"exchange"`
+	Retention          string `json:"retention"`
+	Product            string `json:"product"`
+	PriceType          string `json:"priceType"`
+	TradingSymbol      string `json:"tradingSymbol"`
+	TransactionType    string `json:"transactionType"`
+	Price              string `json:"price"`
+	TriggerPrice       string `json:"triggerPrice"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	Quantity           string `json:"quantity"`
+	Remarks            string `json:"remarks"`
 }
 
 // Models for OrderMargin
@@ -224,7 +226,7 @@ type ModifyOrderRequest struct {
 	Quantity       string `json:"quantity"`
 	Product        string `json:"product"`
 	Retention      string `json:"retention"`
-	Mkt_protection string `json:"mkt_protection"`
+	Mkt_protection string `json:"mkt_protection,omitempty"`
 }
 
 type ModifyOrderRequestBody struct {
@@ -238,7 +240,7 @@ type ModifyOrderRequestBody struct {
 	Quantity       string `json:"quantity"`
 	Product        string `json:"product"`
 	Retention      string `json:"retention"`
-	Mkt_protection string `json:"mkt_protection"`
+	Mkt_protection string `json:"mkt_protection,omitempty"`
 }
 
 type BrokerageCalculatorRequest struct {

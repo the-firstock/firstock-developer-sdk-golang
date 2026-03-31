@@ -142,18 +142,19 @@ func (fs *firstock) PlaceOrder(req PlaceOrderRequest) (placeOrderResponse *Place
 	}
 
 	reqBody := PlaceOrderRequestBody{
-		UserId:          req.UserId,
-		JKey:            jkey,
-		Exchange:        req.Exchange,
-		Retention:       req.Retention,
-		Product:         req.Product,
-		PriceType:       req.PriceType,
-		TradingSymbol:   req.TradingSymbol,
-		TransactionType: req.TransactionType,
-		Price:           req.Price,
-		TriggerPrice:    req.TriggerPrice,
-		Quantity:        req.Quantity,
-		Remarks:         req.Remarks,
+		UserId:             req.UserId,
+		JKey:               jkey,
+		Exchange:           req.Exchange,
+		Retention:          req.Retention,
+		Product:            req.Product,
+		PriceType:          req.PriceType,
+		TradingSymbol:      req.TradingSymbol,
+		TransactionType:    req.TransactionType,
+		Price:              req.Price,
+		TriggerPrice:       req.TriggerPrice,
+		Quantity:           req.Quantity,
+		MktProtectionPrice: req.MktProtectionPrice,
+		Remarks:            req.Remarks,
 	}
 
 	placeOrderDetails, code, _ := thefirstock.PlaceOrderFunction(reqBody)

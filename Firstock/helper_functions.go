@@ -223,6 +223,6 @@ func readJkey(userId string) (string, *ErrorResponseModel) {
 }
 
 func check_if_unauthorized(code string) bool {
-	re := regexp.MustCompile(`4\d{2}`)
+	re := regexp.MustCompile(`403`)
 	return re.MatchString(code)
 }

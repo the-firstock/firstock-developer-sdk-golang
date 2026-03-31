@@ -198,7 +198,7 @@ modify_order := Firstock.ModifyOrderRequest{
 	Retention:      "DAY",
 	Mkt_protection: "0.5",
 }
-modifyOrder := Firstock.ModifyOrder(modify_order)
+modifyOrder, err := Firstock.ModifyOrder(modify_order)
 fmt.Printf("Modify Order:\n%v\n", modifyOrder)
 
 // Single Order History
