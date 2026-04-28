@@ -1494,6 +1494,37 @@ func (fs *firstock) TimePriceSeriesDayInterval(req TimePriceSeriesIntervalReques
 
 	errTimePriceSeriesDayInterval = failureResponseStructure(timePriceSeriesDetails)
 	return
+}
+
+func (fs *firstock) BasketOrder(basketOrderRequest BasketOrderParams) (basketOrderResponse map[string]interface{}, errBasketOrderResponse *ErrorResponseModel) {
+	basketOrderResponse = make(map[string]interface{})
+	// Read jKey for userId from config.json
+	jkey, errBasketOrderResponse := readJkey(basketOrderRequest.UserId)
+	if jkey == "" {
+		return
+	}
+
+	reqBody := BasketOrderReqBody{
+		UserId: basketOrderRequest.UserId,
+		JKey:   jkey,
+		Legs:   basketOrderRequest.Legs,
+	}
+
+	basketOrderDetails, code, _ := thefirstock.BasketOrderFunction(reqBody)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(basketOrderRequest.UserId)
+	} else if code == status_internal_server_error {
+		errBasketOrderResponse = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		for k, v := range basketOrderDetails {
+			basketOrderResponse[k] = v
+		}
+		return
+	}
+
+	errBasketOrderResponse = failureResponseStructure(basketOrderDetails)
+	return
 
 }
 
@@ -1513,6 +1544,7 @@ type FirstockAPI interface {
 	HoldingsDetails(userId string) (holdingsResponse *HoldingsDetailsResponse, errRes *ErrorResponseModel)
 	OrderBook(userId string) (orderBookResponse *OrderBookResponse, errRes *ErrorResponseModel)
 	GetExpiry(getExpiryRequest GetInfoRequest) (getExpiryResponse *GetExpiryResponse, errRes *ErrorResponseModel)
+	BasketOrder(basketOrderRequest BasketOrderParams) (basketOrderResponse map[string]interface{}, errBasketOrderResponse *ErrorResponseModel)
 	BrokerageCalculator(brokerageCalculatorRequest BrokerageCalculatorRequest) (brokerageCalculatorResponse *BrokerageCalculatorResponse, errRes *ErrorResponseModel)
 	BasketMargin(basketMarginRequest BasketMarginRequest) (basketMarginResponse *BasketMarginResponse, errRes *ErrorResponseModel)
 	GetSecurityInfo(getSecurityInfoRequest GetInfoRequest) (getSecurityInfoResponse *GetSecurityInfoResponse, errRes *ErrorResponseModel)
@@ -1693,6 +1725,10 @@ func CancelGttOrder(cancelGttOrderRequest Cancel_GTT_Params) (cancelGttOrderResp
 
 func GttOrderBook(userId string) (gttOrderBookResponse map[string]interface{}, errRes *ErrorResponseModel) {
 	return firstockAPI.GttOrderBook(userId)
+}
+
+func BasketOrder(req BasketOrderParams) (basketOrderResponse map[string]interface{}, errRes *ErrorResponseModel) {
+	return firstockAPI.BasketOrder(req)
 }
 
 func TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel) {

@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.4.4]
+[Version - 1.4.5]
 
 
 ## Documentation
@@ -404,6 +404,29 @@ optionChainGreeksRequest := Firstock.OptionChainGreeksRequest{
 optionChainGreeks, err := Firstock.OptionChainGreeks(optionChainGreeksRequest)
 fmt.Println("Error:", err)
 fmt.Println("Result:", optionChainGreeks)
+
+// Basket Order
+basketOrderRequest := Firstock.BasketOrderParams{
+	UserId: userId,
+	Legs: []Firstock.LegDetails{
+		{
+			ExchangeSegment:    "NFO",
+			Retention:          "DAY",
+			Product:            "M",
+			PriceType:          "MKT",
+			TradingSymbol:      "NIFTY28APR26C23700",
+			TransactionType:    "S",
+			Price:              "70.00",
+			TriggerPrice:       "0",
+			Quantity:           "65",
+			MktProtectionPrice: "1",
+			Remarks:            "seq-leg1-buy-call",
+		},
+	},
+}
+basketOrder, err := Firstock.BasketOrder(basketOrderRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", basketOrder)
 
 // Search Scrips
 searchScripsRequest := Firstock.SearchScripsRequest{

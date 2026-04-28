@@ -42,7 +42,7 @@ const place_gtt_order_url = base_url + "/placeGttOrder"
 const modify_gtt_order_url = base_url + "/modifyGttOrder"
 const cancel_gtt_order_url = base_url + "/cancelGttOrder"
 const gtt_order_book_url = base_url + "/GttOrderBook"
-
+const basket_order_url = base_url + "/basketOrder"
 const time_price_series_url = base_url + "/timePriceSeries"
 
 const scheme = "wss"

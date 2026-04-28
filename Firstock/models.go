@@ -243,6 +243,32 @@ type ModifyOrderRequestBody struct {
 	Mkt_protection string `json:"mkt_protection,omitempty"`
 }
 
+type BasketOrderParams struct {
+	UserId string       `json:"userId"`
+	Legs   []LegDetails `json:"legs,omitempty"`
+}
+
+type BasketOrderReqBody struct {
+	UserId string       `json:"userId"`
+	JKey   string       `json:"jkey"`
+	Legs   []LegDetails `json:"legs,omitempty"`
+}
+
+type LegDetails struct {
+	ExchangeSegment    string `json:"exchange"`
+	Retention          string `json:"retention"`
+	Product            string `json:"product"`
+	PriceType          string `json:"priceType"`
+	TradingSymbol      string `json:"tradingSymbol"`
+	TransactionType    string `json:"transactionType"`
+	GuiOrdId           string `json:"gui_order_id,omitempty"`
+	Price              string `json:"price,omitempty"`
+	TriggerPrice       string `json:"triggerPrice,omitempty"`
+	Quantity           string `json:"quantity"`
+	MktProtectionPrice string `json:"mkt_protection,omitempty"`
+	Remarks            string `json:"remarks,omitempty"`
+}
+
 type BrokerageCalculatorRequest struct {
 	UserId          string `json:"userId"`
 	Exchange        string `json:"exchange"`
