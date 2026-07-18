@@ -1299,3 +1299,107 @@ type WebsocketAuthorization struct {
 	Message string `json:"message"`
 	Status  string `json:"status"`
 }
+
+//--------------------------------------------------Combined Holdings Response--------------------------------------------
+
+type CombinedHoldingsResponse struct {
+	Status  string               `json:"status"`
+	Message string               `json:"message"`
+	Data    CombinedHoldingsData `json:"data"`
+}
+
+type CombinedHoldingsData struct {
+	MutualFunds      MutualFundHoldingsSummary `json:"mutualFunds"`
+	Stocks           StocksHoldingsSummary     `json:"stocks"`
+	CombinedHoldings CombinedHoldingsSummary   `json:"combinedHoldings"`
+}
+
+type MutualFundHoldingsSummary struct {
+	Holdings            []MutualFundHolding `json:"holdings"`
+	TotalInvested       float64             `json:"totalInvested"`
+	TotalCurrentValue   float64             `json:"totalCurrentValue"`
+	TotalReturns        float64             `json:"totalReturns"`
+	TotalReturnsPercent float64             `json:"totalReturnsPercent"`
+	NumberOfHoldings    int                 `json:"numberOfHoldings"`
+	DayReturns          float64             `json:"dayReturns"`
+	DayReturnsPercent   float64             `json:"dayReturnsPercent"`
+}
+
+type MutualFundHolding struct {
+	FundName                   string               `json:"fundName"`
+	ISIN                       string               `json:"isin"`
+	AvgNav                     float64              `json:"avgNav"`
+	CurrentNav                 float64              `json:"currentNav"`
+	NavDate                    string               `json:"navDate"`
+	InvestedAmount             float64              `json:"investedAmount"`
+	CurrentValue               float64              `json:"currentValue"`
+	PnlAmount                  float64              `json:"pnlAmount"`
+	PnlPercent                 float64              `json:"pnlPercent"`
+	HoldingQuantity            float64              `json:"holdingQuantity"`
+	CustomAvailableToPledgeQty float64              `json:"customAvailableToPledgeQty"`
+	CustomEdisAuthorizedQty    float64              `json:"customEdisAuthorizedQty"`
+	CustomEdisQty              float64              `json:"customEdisQty"`
+	CustomEdisToAuthorizeQty   float64              `json:"customEdisToAuthorizeQty"`
+	CustomPledgeQty            float64              `json:"customPledgeQty"`
+	IsPledge                   bool                 `json:"isPledge"`
+	PledgeReqQty               float64              `json:"pledgeReqQty"`
+	SIPDetails                 MutualFundSIPDetails `json:"sipDetails"`
+	ApprovedPrevClose          float64              `json:"approvedPrevClose"`
+	FolioNum                   string               `json:"folioNum"`
+	AvailableToRedeemUnits     float64              `json:"availableToRedeemUnits"`
+	AvailableToRedeemAmount    float64              `json:"availableToRedeemAmount"`
+}
+
+type MutualFundSIPDetails struct {
+	TotalSIPs            int     `json:"totalSips"`
+	TotalAmount          float64 `json:"totalAmount"`
+	NextInvestmentAmount float64 `json:"nextInvestmentAmount"`
+	Frequency            string  `json:"frequency"`
+	NextDueDate          string  `json:"nextDueDate"`
+}
+
+type StocksHoldingsSummary struct {
+	Holdings            []HoldingData `json:"holdings"`
+	TotalInvested       float64       `json:"totalInvested"`
+	TotalCurrentValue   float64       `json:"totalCurrentValue"`
+	TotalReturns        float64       `json:"totalReturns"`
+	TotalReturnsPercent float64       `json:"totalReturnsPercent"`
+	DayReturns          float64       `json:"dayReturns"`
+	DayReturnsPercent   float64       `json:"dayReturnsPercent"`
+	NumberOfHoldings    int           `json:"numberOfHoldings"`
+}
+
+type HoldingData struct {
+	ExchangeTradingSymbol    []ExchangeTradingSymbol `json:"exchangeTradingSymbol"`
+	SellAmount               string                  `json:"sellAmount"`
+	HoldQuantity             string                  `json:"holdQuantity"`
+	HairCut                  string                  `json:"hairCut,omitempty"`
+	DpQuantity               string                  `json:"dpQuantity,omitempty"`
+	UnPledgeQuantity         string                  `json:"unPledgeQuantity,omitempty"`
+	UploadPrice              string                  `json:"uploadPrice"`
+	BTSTQuantity             string                  `json:"BTSTQuantity"`
+	UsedQuantity             string                  `json:"usedQuantity"`
+	TradeQuantity            string                  `json:"tradeQuantity"`
+	BrokerCollateralQuantity string                  `json:"brokerCollateralQuantity,omitempty"`
+	BeneficiaryQuantity      string                  `json:"beneficiaryQuantity,omitempty"`
+	CollateralQuantity       string                  `json:"collateralQuantity,omitempty"`
+}
+
+type ExchangeTradingSymbol struct {
+	Exchange       string `json:"exchange"`
+	Token          string `json:"token"`
+	TradingSymbol  string `json:"tradingSymbol"`
+	PricePrecision string `json:"pricePrecision"`
+	TickSize       string `json:"tickSize"`
+	LotSize        string `json:"lotSize"`
+}
+
+type CombinedHoldingsSummary struct {
+	TotalInvested       float64 `json:"totalInvested"`
+	TotalCurrentValue   float64 `json:"totalCurrentValue"`
+	TotalReturns        float64 `json:"totalReturns"`
+	TotalReturnsPercent float64 `json:"totalReturnsPercent"`
+	DayReturns          float64 `json:"dayReturns"`
+	DayReturnsPercent   float64 `json:"dayReturnsPercent"`
+	NumberOfHoldings    int     `json:"numberOfHoldings"`
+}

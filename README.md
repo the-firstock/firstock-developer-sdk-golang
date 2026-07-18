@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.4.5]
+[Version - 1.5.5]
 
 
 ## Documentation
@@ -462,6 +462,11 @@ timePriceSeriesDayIntervalRequest := Firstock.TimePriceSeriesIntervalRequest{
 timePriceSeriesDayInterval, err := Firstock.TimePriceSeriesDayInterval(timePriceSeriesDayIntervalRequest)
 fmt.Println("Error:", err)
 fmt.Println("Result:", timePriceSeriesDayInterval)
+
+// Combined Holdings
+combinedHoldings, err := Firstock.CombinedHoldings(userId)
+fmt.Println("Error:", err)
+fmt.Println("Result:", combinedHoldings)
 
 //Websockets
 model := Firstock.WebSocketModel{

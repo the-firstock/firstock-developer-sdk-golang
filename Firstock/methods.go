@@ -1528,6 +1528,40 @@ func (fs *firstock) BasketOrder(basketOrderRequest BasketOrderParams) (basketOrd
 
 }
 
+// Call UserDetails function to fetch user details from Firstock
+func (fs *firstock) CombinedHoldings(userId string) (combinedHoldingsResponse *CombinedHoldingsResponse, errUserDetails *ErrorResponseModel) {
+	var combinedHoldingsRequest BaseRequest
+	combinedHoldingsResponse = &CombinedHoldingsResponse{}
+	combinedHoldingsRequest.UserId = userId
+
+	// Read jKey for userId from config.json
+	combinedHoldingsRequest.JKey, errUserDetails = readJkey(userId)
+	if combinedHoldingsRequest.JKey == "" {
+		return
+	}
+
+	combinedHoldingsDetails, code, _ := thefirstock.CombinedHoldingsFunction(combinedHoldingsRequest)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(userId)
+	} else if code == status_internal_server_error {
+		errUserDetails = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		jsonData, err := json.Marshal(combinedHoldingsDetails)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		// Unmarshal JSON to struct
+		err = json.Unmarshal(jsonData, combinedHoldingsResponse)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		return
+	}
+	errUserDetails = failureResponseStructure(combinedHoldingsDetails)
+	return
+}
+
 type FirstockAPI interface {
 	Login(reqBody LoginRequest) (loginResponse *LoginResponse, errRes *ErrorResponseModel)
 	Logout(userId string) (logoutResponse *LogoutResponse, errRes *ErrorResponseModel)
@@ -1565,6 +1599,7 @@ type FirstockAPI interface {
 	GttOrderBook(userId string) (getGttOrderResponse map[string]interface{}, errRes *ErrorResponseModel)
 	TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesRegularIntervalResponse *TimePriceSeriesRegularIntervalResponse, errRes *ErrorResponseModel)
 	TimePriceSeriesDayInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesDayIntervalResponse *TimePriceSeriesDayIntervalResponse, errRes *ErrorResponseModel)
+	CombinedHoldings(userId string) (combinedHoldingsResponse *CombinedHoldingsResponse, errRes *ErrorResponseModel)
 	InitializeWebSockets(userId string, model WebSocketModel) (errRes *ErrorResponseModel)
 	CloseWebSocket(conn *websocket.Conn) (err *ErrorResponseModel)
 	Subscribe(conn *websocket.Conn, data []string) (err *ErrorResponseModel)
@@ -1737,4 +1772,8 @@ func TimePriceSeriesRegularInterval(req TimePriceSeriesIntervalRequest) (timePri
 
 func TimePriceSeriesDayInterval(req TimePriceSeriesIntervalRequest) (timePriceSeriesDayIntervalResponse *TimePriceSeriesDayIntervalResponse, errRes *ErrorResponseModel) {
 	return firstockAPI.TimePriceSeriesDayInterval(req)
+}
+
+func CombinedHoldings(userId string) (combinedHoldingsResponse *CombinedHoldingsResponse, errRes *ErrorResponseModel) {
+	return firstockAPI.CombinedHoldings(userId)
 }
