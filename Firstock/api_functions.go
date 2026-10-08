@@ -94,6 +94,87 @@ func (fs *apifunctions) UserDetailsFunction(reqBody UserDetailsRequest) (userDet
 
 }
 
+func (fs *apifunctions) PlaceOcoOrderFunction(reqBody PlaceOcoOrderRequestBody) (placeOcoOrderResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(place_oco_order_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &placeOcoOrderResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+
+}
+
+func (fs *apifunctions) ModifyOcoOrderFunction(reqBody ModifyOcoOrderRequestBody) (modifyOcoOrderResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(modify_oco_order_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &modifyOcoOrderResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+
+}
+
+func (fs *apifunctions) CancelOcoOrderFunction(reqBody CancelOcoOrderRequestBody) (cancelOcoOrderResponse map[string]interface{}, statusCode string, err error) {
+
+	jsonPayload, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to marshal payload: %w", err)
+	}
+
+	resp, err := http.Post(cancel_oco_order_url, "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, "500", fmt.Errorf("HTTP request failed: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, "500", fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	if err := json.Unmarshal(body, &cancelOcoOrderResponse); err != nil {
+		return nil, "500", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	statusCode = strconv.Itoa(resp.StatusCode)
+	return
+
+}
+
 func (fs *apifunctions) PlaceOrderFunction(req PlaceOrderRequestBody) (placeOrderResponse map[string]interface{}, statusCode string, err error) {
 
 	jsonPayload, err := json.Marshal(req)

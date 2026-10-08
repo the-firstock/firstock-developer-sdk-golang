@@ -580,6 +580,59 @@ type UserDetailsData struct {
 	UserName    string   `json:"userName"`
 }
 
+// -------------------------------------------------- Oco Order --------------------------------------------
+type OcoOrderResponse struct {
+	Status  string            `json:"status"`
+	Message string            `json:"message"`
+	Data    PlaceOcoOrderData `json:"data"`
+}
+
+type PlaceOcoOrderData struct {
+	OCOID  string `json:"OCOid"`
+	Status string `json:"Status"`
+}
+
+type ModifyOcoOrderRequest struct {
+	UserID          string         `json:"userId"`
+	OCOID           string         `json:"OCOid"`
+	Exchange        string         `json:"exchange"`
+	TradingSymbol   string         `json:"tradingSymbol"`
+	OrderParamsLeg1 OrderParamsLeg `json:"OrderParamsLeg1"`
+	OrderParamsLeg2 OrderParamsLeg `json:"OrderParamsLeg2"`
+}
+
+type ModifyOcoOrderRequestBody struct {
+	UserID          string         `json:"userId"`
+	JKey            string         `json:"jkey"`
+	OCOID           string         `json:"OCOid"`
+	Exchange        string         `json:"exchange"`
+	TradingSymbol   string         `json:"tradingSymbol"`
+	OrderParamsLeg1 OrderParamsLeg `json:"OrderParamsLeg1"`
+	OrderParamsLeg2 OrderParamsLeg `json:"OrderParamsLeg2"`
+}
+
+type OrderParamsLeg struct {
+	TransactionType string  `json:"transactionType"`
+	PriceType       string  `json:"priceType"`
+	Product         string  `json:"product"`
+	Retention       string  `json:"retention"`
+	TriggerPrice    string  `json:"triggerPrice"`
+	Quantity        string  `json:"quantity"`
+	Price           *string `json:"price,omitempty"`
+	TargetPrice     *string `json:"targetPrice,omitempty"`
+}
+
+type CancelOcoOrderRequest struct {
+	UserID string `json:"userId"`
+	OCOID  string `json:"OCOid"`
+}
+
+type CancelOcoOrderRequestBody struct {
+	UserID string `json:"userId"`
+	JKey   string `json:"jkey"`
+	OCOID  string `json:"OCOid"`
+}
+
 //--------------------------------------------------Place Order Response--------------------------------------------
 
 type PlaceOrderResponse struct {
@@ -1402,4 +1455,25 @@ type CombinedHoldingsSummary struct {
 	DayReturns          float64 `json:"dayReturns"`
 	DayReturnsPercent   float64 `json:"dayReturnsPercent"`
 	NumberOfHoldings    int     `json:"numberOfHoldings"`
+}
+
+//--------------------------------------------------OCO Orders--------------------------------------------
+
+type PlaceOcoOrderRequestBody struct {
+	UserID          string         `json:"userId"`
+	JKey            string         `json:"jkey"`
+	Exchange        string         `json:"exchange"`
+	TradingSymbol   string         `json:"tradingSymbol"`
+	Validity        string         `json:"validity"`
+	OrderParamsLeg1 OrderParamsLeg `json:"OrderParamsLeg1"`
+	OrderParamsLeg2 OrderParamsLeg `json:"OrderParamsLeg2"`
+}
+
+type PlaceOcoOrderRequest struct {
+	UserID          string         `json:"userId"`
+	Exchange        string         `json:"exchange"`
+	TradingSymbol   string         `json:"tradingSymbol"`
+	Validity        string         `json:"validity"`
+	OrderParamsLeg1 OrderParamsLeg `json:"OrderParamsLeg1"`
+	OrderParamsLeg2 OrderParamsLeg `json:"OrderParamsLeg2"`
 }

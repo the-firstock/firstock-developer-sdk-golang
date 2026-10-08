@@ -132,6 +132,149 @@ func (fs *firstock) UserDetails(userId string) (userDetailsResponse *UserDetails
 	return
 }
 
+// Call UserDetails function to fetch user details from Firstock
+func (fs *firstock) PlaceOcoOrder(req PlaceOcoOrderRequest) (placeOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel) {
+	var placeOcoOrderRequest PlaceOcoOrderRequestBody
+	placeOcoOrderResponse = &OcoOrderResponse{}
+	placeOcoOrderRequest.UserID = req.UserID
+
+	// Read jKey for userId from config.json
+	placeOcoOrderRequest.JKey, errRes = readJkey(req.UserID)
+	if placeOcoOrderRequest.JKey == "" {
+		return
+	}
+	placeOcoOrderRequest.Exchange = req.Exchange
+	placeOcoOrderRequest.TradingSymbol = req.TradingSymbol
+	placeOcoOrderRequest.Validity = req.Validity
+	placeOcoOrderRequest.OrderParamsLeg1 = OrderParamsLeg{
+		TransactionType: req.OrderParamsLeg1.TransactionType,
+		PriceType:       req.OrderParamsLeg1.PriceType,
+		Product:         req.OrderParamsLeg1.Product,
+		Retention:       req.OrderParamsLeg1.Retention,
+		TriggerPrice:    req.OrderParamsLeg1.TriggerPrice,
+		Quantity:        req.OrderParamsLeg1.Quantity,
+		Price:           req.OrderParamsLeg1.Price,
+	}
+	placeOcoOrderRequest.OrderParamsLeg2 = OrderParamsLeg{
+		TransactionType: req.OrderParamsLeg2.TransactionType,
+		PriceType:       req.OrderParamsLeg2.PriceType,
+		Product:         req.OrderParamsLeg2.Product,
+		Retention:       req.OrderParamsLeg2.Retention,
+		TriggerPrice:    req.OrderParamsLeg2.TriggerPrice,
+		Quantity:        req.OrderParamsLeg2.Quantity,
+		TargetPrice:     req.OrderParamsLeg2.TargetPrice,
+	}
+
+	placeOcoOrderDetails, code, _ := thefirstock.PlaceOcoOrderFunction(placeOcoOrderRequest)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(req.UserID)
+	} else if code == status_internal_server_error {
+		errRes = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		jsonData, err := json.Marshal(placeOcoOrderDetails)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		// Unmarshal JSON to struct
+		err = json.Unmarshal(jsonData, placeOcoOrderResponse)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		return
+	}
+	errRes = failureResponseStructure(placeOcoOrderDetails)
+	return
+}
+
+func (fs *firstock) ModifyOcoOrder(req ModifyOcoOrderRequest) (modifyOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel) {
+	var modifyOcoOrderRequest ModifyOcoOrderRequestBody
+	modifyOcoOrderResponse = &OcoOrderResponse{}
+	modifyOcoOrderRequest.UserID = req.UserID
+
+	// Read jKey for userId from config.json
+	modifyOcoOrderRequest.JKey, errRes = readJkey(req.UserID)
+	if modifyOcoOrderRequest.JKey == "" {
+		return
+	}
+	modifyOcoOrderRequest.OCOID = req.OCOID
+	modifyOcoOrderRequest.Exchange = req.Exchange
+	modifyOcoOrderRequest.TradingSymbol = req.TradingSymbol
+	modifyOcoOrderRequest.OrderParamsLeg1 = OrderParamsLeg{
+		TransactionType: req.OrderParamsLeg1.TransactionType,
+		PriceType:       req.OrderParamsLeg1.PriceType,
+		Product:         req.OrderParamsLeg1.Product,
+		Retention:       req.OrderParamsLeg1.Retention,
+		TriggerPrice:    req.OrderParamsLeg1.TriggerPrice,
+		Quantity:        req.OrderParamsLeg1.Quantity,
+		Price:           req.OrderParamsLeg1.Price,
+	}
+	modifyOcoOrderRequest.OrderParamsLeg2 = OrderParamsLeg{
+		TransactionType: req.OrderParamsLeg2.TransactionType,
+		PriceType:       req.OrderParamsLeg2.PriceType,
+		Product:         req.OrderParamsLeg2.Product,
+		Retention:       req.OrderParamsLeg2.Retention,
+		TriggerPrice:    req.OrderParamsLeg2.TriggerPrice,
+		Quantity:        req.OrderParamsLeg2.Quantity,
+		TargetPrice:     req.OrderParamsLeg2.TargetPrice,
+	}
+
+	modifyOcoOrderDetails, code, _ := thefirstock.ModifyOcoOrderFunction(modifyOcoOrderRequest)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(req.UserID)
+	} else if code == status_internal_server_error {
+		errRes = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		jsonData, err := json.Marshal(modifyOcoOrderDetails)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		// Unmarshal JSON to struct
+		err = json.Unmarshal(jsonData, modifyOcoOrderResponse)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		return
+	}
+	errRes = failureResponseStructure(modifyOcoOrderDetails)
+	return
+}
+
+func (fs *firstock) CancelOcoOrder(req CancelOcoOrderRequest) (cancelOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel) {
+	var cancelOcoOrderRequest CancelOcoOrderRequestBody
+	cancelOcoOrderResponse = &OcoOrderResponse{}
+	cancelOcoOrderRequest.UserID = req.UserID
+
+	// Read jKey for userId from config.json
+	cancelOcoOrderRequest.JKey, errRes = readJkey(req.UserID)
+	if cancelOcoOrderRequest.JKey == "" {
+		return
+	}
+	cancelOcoOrderRequest.OCOID = req.OCOID
+
+	cancelOcoOrderDetails, code, _ := thefirstock.CancelOcoOrderFunction(cancelOcoOrderRequest)
+	if check_if_unauthorized(code) {
+		removeJKeyFromConfig(req.UserID)
+	} else if code == status_internal_server_error {
+		errRes = internalServerErrorResponse()
+		return
+	} else if code == status_ok {
+		jsonData, err := json.Marshal(cancelOcoOrderDetails)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		// Unmarshal JSON to struct
+		err = json.Unmarshal(jsonData, cancelOcoOrderResponse)
+		if err != nil {
+			return nil, internalServerErrorResponse()
+		}
+		return
+	}
+	errRes = failureResponseStructure(cancelOcoOrderDetails)
+	return
+}
+
 func (fs *firstock) PlaceOrder(req PlaceOrderRequest) (placeOrderResponse *PlaceOrderResponse, errPlaceOrder *ErrorResponseModel) {
 	placeOrderResponse = &PlaceOrderResponse{}
 
@@ -1565,6 +1708,9 @@ func (fs *firstock) CombinedHoldings(userId string) (combinedHoldingsResponse *C
 type FirstockAPI interface {
 	Login(reqBody LoginRequest) (loginResponse *LoginResponse, errRes *ErrorResponseModel)
 	Logout(userId string) (logoutResponse *LogoutResponse, errRes *ErrorResponseModel)
+	PlaceOcoOrder(req PlaceOcoOrderRequest) (placeOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel)
+	ModifyOcoOrder(req ModifyOcoOrderRequest) (modifyOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel)
+	CancelOcoOrder(req CancelOcoOrderRequest) (cancelOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel)
 	UserDetails(userId string) (userDetailsResponse *UserDetailsResponse, errRes *ErrorResponseModel)
 	PlaceOrder(req PlaceOrderRequest) (placeOrderResponse *PlaceOrderResponse, errRes *ErrorResponseModel)
 	OrderMargin(req OrderMarginRequest) (orderMarginResponse *OrderMarginResponse, errRes *ErrorResponseModel)
@@ -1776,4 +1922,16 @@ func TimePriceSeriesDayInterval(req TimePriceSeriesIntervalRequest) (timePriceSe
 
 func CombinedHoldings(userId string) (combinedHoldingsResponse *CombinedHoldingsResponse, errRes *ErrorResponseModel) {
 	return firstockAPI.CombinedHoldings(userId)
+}
+
+func PlaceOcoOrder(placeOcoOrderRequest PlaceOcoOrderRequest) (placeOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel) {
+	return firstockAPI.PlaceOcoOrder(placeOcoOrderRequest)
+}
+
+func ModifyOcoOrder(modifyOcoOrderRequest ModifyOcoOrderRequest) (modifyOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel) {
+	return firstockAPI.ModifyOcoOrder(modifyOcoOrderRequest)
+}
+
+func CancelOcoOrder(cancelOcoOrderRequest CancelOcoOrderRequest) (cancelOcoOrderResponse *OcoOrderResponse, errRes *ErrorResponseModel) {
+	return firstockAPI.CancelOcoOrder(cancelOcoOrderRequest)
 }

@@ -4,7 +4,7 @@ To communicate with the Firstock Developer API using Golang, you can use the off
 Licensed under the MIT License.
 
 
-[Version - 1.5.5]
+[Version - 1.6.5]
 
 
 ## Documentation
@@ -467,6 +467,83 @@ fmt.Println("Result:", timePriceSeriesDayInterval)
 combinedHoldings, err := Firstock.CombinedHoldings(userId)
 fmt.Println("Error:", err)
 fmt.Println("Result:", combinedHoldings)
+
+
+// Place Oco Order
+price := "0.95"
+targetPrice := "1.12"
+
+placeOcoOrderRequest := Firstock.PlaceOcoOrderRequest{
+	UserID:        userId,
+	Exchange:      "NSE",
+	TradingSymbol: "VIKASECO-EQ",
+	Validity:      "GTT",
+
+	OrderParamsLeg1: Firstock.OrderParamsLeg{
+		TransactionType: "S",
+		PriceType:       "LMT",
+		Product:         "C",
+		Retention:       "DAY",
+		TriggerPrice:    "0.95",
+		Quantity:        "1",
+		Price:           &price,
+	},
+
+	OrderParamsLeg2: Firstock.OrderParamsLeg{
+		TransactionType: "S",
+		PriceType:       "LMT",
+		Product:         "C",
+		Retention:       "DAY",
+		TriggerPrice:    "1.10",
+		Quantity:        "1",
+		TargetPrice:     &targetPrice,
+	},
+}
+
+placeOcoOrder, err := Firstock.PlaceOcoOrder(placeOcoOrderRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", placeOcoOrder)
+
+// Modify Oco Order
+modifyOcoOrderRequest := Firstock.ModifyOcoOrderRequest{
+	UserID:        userId,
+	Exchange:      "NSE",
+	TradingSymbol: "VIKASECO-EQ",
+	OCOID:         "26100800000139", // Replace with the actual OCO ID you want to modify
+	OrderParamsLeg1: Firstock.OrderParamsLeg{
+		TransactionType: "S",
+		PriceType:       "LMT",
+		Product:         "C",
+		Retention:       "DAY",
+		TriggerPrice:    "0.95",
+		Quantity:        "1",
+		Price:           &price,
+	},
+
+	OrderParamsLeg2: Firstock.OrderParamsLeg{
+		TransactionType: "S",
+		PriceType:       "LMT",
+		Product:         "C",
+		Retention:       "DAY",
+		TriggerPrice:    "1.10",
+		Quantity:        "1",
+		TargetPrice:     &targetPrice,
+	},
+}
+
+modifyOcoOrder, err := Firstock.ModifyOcoOrder(modifyOcoOrderRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", modifyOcoOrder)
+
+// Cancel Oco Order
+cancelOcoOrderRequest := Firstock.CancelOcoOrderRequest{
+	UserID: userId,
+	OCOID:  "26100800000150", // Replace with the actual OCO ID you want to cancel
+}
+
+cancelOcoOrder, err := Firstock.CancelOcoOrder(cancelOcoOrderRequest)
+fmt.Println("Error:", err)
+fmt.Println("Result:", cancelOcoOrder)
 
 //Websockets
 model := Firstock.WebSocketModel{
